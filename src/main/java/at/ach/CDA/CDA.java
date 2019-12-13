@@ -2,10 +2,12 @@ package at.ach.CDA;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class CDA {
-
+public class CDA
+{
 	public static void main(String[] args)
 	{
 		System.out.println("hello world");
@@ -31,26 +33,33 @@ public class CDA {
 			e.printStackTrace();
 		}
 		
-		/*for(int i=0; i<10; i++)
+		List<String> patientSegment = new ArrayList<String>();
+		
+		while ( sc.hasNextLine() )
 		{
 			String line = sc.nextLine();
-			System.out.println(line);
-		}*/
-		
-		while (sc.hasNextLine()) {
 			
-			String line = sc.nextLine();
-			if (line.contains("<patient>")) {
+			if ( line.contains("<patient>") )
+			{
+				// put all lines in a list, until line contains the closing tag
+				while ( sc.hasNextLine() && !line.contains("</patient>") )
+				{
+					patientSegment.add(line);
+					line = sc.nextLine();
+				}
 				
-			}
-			
-
-			
-			
-			} 
-		
+				patientSegment.add(line);
 			}
 		}
+		
+		// just to check: print all lines in the list
+		for(String s : patientSegment)
+		{
+			System.out.println(s);
+		}
+		
+	}
+}
 
 	
 
