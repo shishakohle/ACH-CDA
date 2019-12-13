@@ -13,10 +13,10 @@ public class CDA {
 		//String cdaDirectory = "./resources/cda/";
 		
 		// This is the improvised path (applying to Dahn's machine)
-		String cdaDirectory = "/*TODO*/";
+		//String cdaDirectory = "/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/";
 		
 		// This is the improvised path (applying to Ingo's machine)
-		// String cdaDirectory = "/home/ingo/git/ACH-CDA/src/main/resources/cda/";
+		String cdaDirectory = "/home/ingo/git/ACH-CDA/src/main/resources/cda/";
 		
 		File cdafile = new File(cdaDirectory+"labreport0.cda");
 		
@@ -31,11 +31,27 @@ public class CDA {
 			e.printStackTrace();
 		}
 		
-		for(int i=0; i<10; i++)
+		/*for(int i=0; i<10; i++)
 		{
 			String line = sc.nextLine();
 			System.out.println(line);
-		}
-	}
+		}*/
+		
+		while (sc.hasNextLine()) {
+			
+			String line = sc.nextLine();
+			if (line.contains("<patient>")) {
+				
+			}
+			
 
-}
+			
+			
+			} 
+		
+			}
+		}
+
+	
+
+
