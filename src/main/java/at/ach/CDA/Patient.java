@@ -17,11 +17,6 @@ public class Patient
 		this.birthdate = birthdate;
 	}
 
-	Patient()
-	{
-		
-	}
-
 	public String getSocialInsuranceNumber()
 	{
 		return this.socialInsuranceNumber;
