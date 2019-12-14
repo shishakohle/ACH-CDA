@@ -33,27 +33,24 @@ public class CDA
 			e.printStackTrace();
 		}
 		
-		List<String> patientSegment = new ArrayList<String>();
+		// get all Lines of CDA file in a list
+		List<String> cdaFileContent = new ArrayList<String>();
 		
-		while ( sc.hasNextLine() )
+		while(sc.hasNext())
 		{
-			String line = sc.nextLine();
-			
-			if ( line.contains("<patient>") )
-			{
-				// put all lines in a list, until line contains the closing tag
-				while ( sc.hasNextLine() && !line.contains("</patient>") )
-				{
-					patientSegment.add(line);
-					line = sc.nextLine();
-				}
-				
-				patientSegment.add(line);
-			}
+			cdaFileContent.add( sc.nextLine() );
 		}
 		
+		// extract the patient segment out of the CDA content into a new list
+		List<String> patientSegment;
+		patientSegment = Extractor.extract(cdaFileContent, "patient");
+		
+		// extract the name segment out of the patient segment into a new list
+		List<String> nameSegment;
+		nameSegment = Extractor.extract(patientSegment, "name");
+		
 		// just to check: print all lines in the list
-		for(String s : patientSegment)
+		for(String s : nameSegment)
 		{
 			System.out.println(s);
 		}
