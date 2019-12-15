@@ -15,10 +15,10 @@ public class CDA
 		//String cdaDirectory = "./resources/cda/";
 		
 		// This is the improvised path (applying to Dahn's machine)
-		//String cdaDirectory = "/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/";
+		String cdaDirectory = "/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/";
 		
 		// This is the improvised path (applying to Ingo's machine)
-		String cdaDirectory = "/home/ingo/git/ACH-CDA/src/main/resources/cda/";
+		//String cdaDirectory = "/home/ingo/git/ACH-CDA/src/main/resources/cda/";
 		
 		File cdafile = new File(cdaDirectory+"labreport0.cda");
 		
@@ -43,17 +43,32 @@ public class CDA
 		
 		// extract the patient segment out of the CDA content into a new list
 		List<String> patientSegment;
-		patientSegment = Extractor.extract(cdaFileContent, "patient");
+		patientSegment = Extractor.extract(cdaFileContent, "patientRole");
+		
 		
 		// extract the name segment out of the patient segment into a new list
-		List<String> nameSegment;
-		nameSegment = Extractor.extract(patientSegment, "name");
+		List<String> givenSegment;
+		givenSegment = Extractor.extract(patientSegment, "given");
 		
+		// removing second given name in the CDA report
+		givenSegment.remove(1);
+		// converting string array to string and remove xml tags
+		String name = givenSegment.toString();
+		String str = name.replaceAll("<.*?>", "");
+		
+		System.out.println(str);
+		
+
+		/*String name = givenSegment.toString();
+		System.out.println(name);*/
+		
+		/*
 		// just to check: print all lines in the list
-		for(String s : nameSegment)
+		for(String e : patientSegment)
 		{
-			System.out.println(s);
-		}
+			patientSegment.add(e);
+		}*/
+	
 		
 	}
 }
