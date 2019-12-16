@@ -46,6 +46,11 @@ public class CDA
 		List<String> patientSegment;
 		patientSegment = Extractor.extract(cdaFileContent, "patientRole");
 		
+		String givenName = Extractor.extractByTag(patientSegment,"given");
+		System.out.println(givenName);
+		String familyName = Extractor.extracted(patientSegment,"family");
+		System.out.println(familyName);
+		
 		
 		// Dahn's manual attempt to extract patient-related segments and add them to an object "patient"
 		// sorry for being super messy 
@@ -58,31 +63,33 @@ public class CDA
 		givenSegment.remove(1);
 	
 		// converting string array to string and remove xml tags
-		String givenName = givenSegment.toString().replaceAll("<.*?>", "");
+		//String givenName = givenSegment.get(0).replaceAll("<.*?>", "").replaceAll("\t","");
 		
 		// extract the name segment out of the patient segment into a new list
 		List<String> familySegment;
 		familySegment = Extractor.extract(patientSegment, "family");
-		String familyName = familySegment.toString().replaceAll("<.*?>", "");
+		//String familyName = familySegment.get(0).replaceAll("<.*?>", "").replaceAll("\t","");
+		
 		
 		
 		List<String> genderSegment;
 		genderSegment = Extractor.extract(patientSegment, "administrativeGenderCode code");
-		String gender = genderSegment.toString().replaceAll("<.*?>", "");
+		String gender = genderSegment.get(0).replaceAll("<.*?>", "");
 		
 		
 		List<String> DOBSegment;
 		DOBSegment = Extractor.extract(patientSegment, "birthTime value");
-		String birthdate = DOBSegment.toString().replaceAll("<.*?>", "");
+		String birthdate = DOBSegment.get(0).replaceAll("<.*?>", "");
+		System.out.println(birthdate);
 		
 		
 		List<String> insuranceSegment;
 		insuranceSegment = Extractor.extract(patientSegment, "Sozialversicherungsnummer des Patienten");
-		String insurance = insuranceSegment.toString().replaceAll("<.*?>", "");
+		String insurance = insuranceSegment.get(0).replaceAll("<.*?>", "");
 	
 		
 		Patient patient = new Patient(insurance, givenName, familyName, gender, birthdate);
-		patient.getGivenName();
+
 		
 	
 		/*String name = givenSegment.toString();
