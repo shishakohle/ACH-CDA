@@ -62,7 +62,7 @@
 	<!--
 		Hoheitsbereich des Dokuments (siehe Allgemeiner Leitfaden, Kapitel 6.2.3)
 	-->
-	<realmCode code="AT"/>
+    <realmCode code="AT"/>
 	
 	<!--
 		Dokumentformat (siehe Allgemeiner Leitfaden, Kapitel 6.2.4)
