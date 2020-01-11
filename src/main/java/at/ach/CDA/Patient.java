@@ -41,4 +41,11 @@ public class Patient
 	{
 		return this.birthdate;
 	}
+	
+	@Override
+    public String toString() 
+	{
+        return givenName + " " + familyName;
+    }
+	
 }
