@@ -151,7 +151,11 @@ public class XMLparsingStAX
 								break;
 								
 								case "family":
-									patient.setFamilyName( reader.nextEvent().asCharacters().getData() );
+									Attribute familyQualifier = startElement.getAttributeByName(new QName("qualifier"));
+									if (familyQualifier==null)
+									{
+										patient.setFamilyName( reader.nextEvent().asCharacters().getData() );
+									}
 								break;
 								
 								case "given":
