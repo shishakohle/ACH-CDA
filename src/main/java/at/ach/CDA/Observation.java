@@ -16,13 +16,17 @@ public class Observation
 	private String codeSystem;
 	private String codeSystemName;
 	private String displayName;
-	private Time effectiveTimeValue;
+	private String effectiveTimeValue;
 	private String valueUnit;
-	private int valueValue;
+	private String valueValue;
 
 	
+	public Observation()
+	{
+	}
+	
 	public Observation(String codeCode, String codeSystem, String codeSystemName, String displayName,
-						Time effectiveTimeValue, String valueUnit, int valueValue)
+						String effectiveTimeValue, String valueUnit, String valueValue)
 	{
 		this.codeCode = codeCode;
 		this.codeSystem = codeSystem;
@@ -38,12 +42,12 @@ public class Observation
 		this.valueUnit = newUnit;
 	}
 	
-	public void setValue(int newValue) 
+	public void setValue(String newValue) 
 	{
 		this.valueValue = newValue;
 	}
 	
-	public void setTime(Time newEffectiveTime) 
+	public void setTime(String newEffectiveTime) 
 	{
 		this.effectiveTimeValue = newEffectiveTime;
 	}
@@ -68,7 +72,7 @@ public class Observation
 		return this.displayName;
 	}
 	
-	public Time effectiveTimevalue() 
+	public String effectiveTimevalue() 
 	{
 		return this.effectiveTimeValue;
 	} 
@@ -78,7 +82,7 @@ public class Observation
 		return this.valueUnit;
 	}
 	
-	public int valueValue() 
+	public String valueValue() 
 	{
 		return this.valueValue;
 	}
