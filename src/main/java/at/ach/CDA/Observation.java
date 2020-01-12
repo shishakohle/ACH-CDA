@@ -36,61 +36,60 @@ public class Observation
 		this.valueUnit = valueUnit;
 		this.valueValue = valueValue;
 	}
-	
-	public void setValueUnit(String newUnit) 
-	{
-		this.valueUnit = newUnit;
+
+	public String getCodeCode() {
+		return codeCode;
 	}
-	
-	public void setValue(String newValue) 
-	{
-		this.valueValue = newValue;
+
+	public void setCodeCode(String codeCode) {
+		this.codeCode = codeCode;
 	}
-	
-	public void setTime(String newEffectiveTime) 
-	{
-		this.effectiveTimeValue = newEffectiveTime;
+
+	public String getCodeSystem() {
+		return codeSystem;
 	}
-	
-	public String codeCode() 
-	{
-		return this.codeCode;
+
+	public void setCodeSystem(String codeSystem) {
+		this.codeSystem = codeSystem;
 	}
-	
-	public String codeSystem()
-	{
-		return this.codeSystem;
+
+	public String getCodeSystemName() {
+		return codeSystemName;
 	}
-	
-	public String codeSystemName()
-	{
-		return this.codeSystemName;
+
+	public void setCodeSystemName(String codeSystemName) {
+		this.codeSystemName = codeSystemName;
 	}
-	
-	public String displayName()
-	{
-		return this.displayName;
-	}
-	
-	public String effectiveTimevalue() 
-	{
-		return this.effectiveTimeValue;
-	} 
-	
-	public String valueUnit()
-	{
-		return this.valueUnit;
-	}
-	
-	public String valueValue() 
-	{
-		return this.valueValue;
-	}
-	
-	
-	@Override
-	public String toString() 
-	{
+
+	public String getDisplayName() {
 		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public String getEffectiveTimeValue() {
+		return effectiveTimeValue;
+	}
+
+	public void setEffectiveTimeValue(String effectiveTimeValue) {
+		this.effectiveTimeValue = effectiveTimeValue;
+	}
+
+	public String getValueUnit() {
+		return valueUnit;
+	}
+
+	public void setValueUnit(String valueUnit) {
+		this.valueUnit = valueUnit;
+	}
+
+	public String getValueValue() {
+		return valueValue;
+	}
+
+	public void setValueValue(String valueValue) {
+		this.valueValue = valueValue;
 	}
 }
