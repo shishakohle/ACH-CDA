@@ -17,6 +17,30 @@ public class Patient
 		this.birthdate = birthdate;
 	}
 
+	public Patient() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void setSocialInsuranceNumber(String socialInsuranceNumber) {
+		this.socialInsuranceNumber = socialInsuranceNumber;
+	}
+
+	public void setGivenName(String givenName) {
+		this.givenName = givenName;
+	}
+
+	public void setFamilyName(String familyName) {
+		this.familyName = familyName;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public void setBirthdate(String birthdate) {
+		this.birthdate = birthdate;
+	}
+
 	public String getSocialInsuranceNumber()
 	{
 		return this.socialInsuranceNumber;
