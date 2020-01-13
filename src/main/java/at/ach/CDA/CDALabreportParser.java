@@ -201,7 +201,8 @@ public class CDALabreportParser
 		}
 		catch (FileNotFoundException | XMLStreamException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Could not parse Patient from file: " + cdaFilepath);
 		}
 		
 		return patient;
@@ -353,7 +354,8 @@ public class CDALabreportParser
 		}
 		catch (FileNotFoundException | XMLStreamException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Could not parse Observations from file: " + cdaFilepath);
 		}
 		
 		return resultList;
