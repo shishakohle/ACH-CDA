@@ -38,7 +38,6 @@ public class GUI extends JFrame {
 	private JList list2;
 	private JTable table;
 	private JTextField textField;
-	private JCheckBox[] boxes;
 	private String tests[]= {"Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH"};
 	private JPanel panel_7;
 	private ChartPanel chartPanel;
@@ -207,14 +206,10 @@ public class GUI extends JFrame {
 		BigPanel1.add(pane);
 		CheckBoxPanel.setLayout(new GridLayout(0, 2, 0, 0));
 		
-		boxes = new JCheckBox[tests.length];
-		for (int i=0; i<tests.length; i++)
+		for(String test : tests)
 		{
-			CheckBoxMaker(i);
-			CheckBoxPanel.add(boxes[i]);
+			CheckBoxPanel.add(new JCheckBox(test));
 		}
-		
-		
 		
 		/*-- Panels --*/
 		
@@ -493,11 +488,6 @@ public class GUI extends JFrame {
 		
 		BigPanel3.add(btnAdd);	
 
-	}
-	
-	public void CheckBoxMaker(int i) {
-		boxes[i] = new JCheckBox(tests[i]);
-		
 	}
 	
 	public void printSelectedNames(JCheckBox[] boxes) {
