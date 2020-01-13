@@ -1,7 +1,5 @@
 package at.ach.CDA;
 
-
-
 import javax.swing.*;
 import java.util.Vector;
 import javax.swing.border.EmptyBorder;
