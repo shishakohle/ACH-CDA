@@ -24,16 +24,14 @@ import javax.xml.stream.events.XMLEvent;
  *   [1] https://www.baeldung.com/java-stax (2020-01-11)
  */
 
-public class XMLparsingStAX
+public class CDALabreportParser
 {
-	private static String path = "/home/ingo/git/ACH-CDA/src/main/resources/cda/" + "ingosxml.xml";
-	
-	private static String cdaDirectory      = "/home/ingo/git/ACH-CDA/src/main/resources/cda/";
-	private static String labreportFilename = "labreport1.cda";
-	private static String cdaFilepath       = cdaDirectory + labreportFilename;
-	
 	public static void main(String[] args)
 	{
+		String cdaDirectory      = "/home/ingo/git/ACH-CDA/src/main/resources/cda/";
+		String labreportFilename = "labreport1.cda";
+		String cdaFilepath       = cdaDirectory + labreportFilename;
+		
 		Patient extractedPatient = extractPatient(cdaFilepath);
 		
 		System.out.println("Social ins.no.: " + extractedPatient.getSocialInsuranceNumber());
@@ -67,6 +65,7 @@ public class XMLparsingStAX
 			 *  XMLInputFactory to create an XMLEventReader for reading our file: "
 			 */
 			
+			String path = "/home/ingo/git/ACH-CDA/src/main/resources/cda/" + "ingosxml.xml";
 			XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 			XMLEventReader reader = xmlInputFactory.createXMLEventReader(new FileInputStream(path));
 			
@@ -358,5 +357,10 @@ public class XMLparsingStAX
 		}
 		
 		return resultList;
+	}
+	
+	public static Labreport extractLabreport(String cdaFilepath)
+	{
+		return new Labreport( extractPatient(cdaFilepath), extractObservations(cdaFilepath) );
 	}
 }
