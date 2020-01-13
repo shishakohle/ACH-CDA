@@ -34,18 +34,13 @@ public class XMLparsingStAX
 	
 	public static void main(String[] args)
 	{
-		List<Patient> extractedPatients = extractPatients(cdaFilepath);
+		Patient extractedPatient = extractPatient(cdaFilepath);
 		
-		System.out.println("Extracted patients: " + extractedPatients.size());
-		
-		for(Patient p : extractedPatients)
-		{
-			System.out.println("Social ins.no.: " + p.getSocialInsuranceNumber());
-			System.out.println("Given name: " + p.getGivenName());
-			System.out.println("Family Name: " + p.getFamilyName());
-			System.out.println("Gender: " + p.getGender());
-			System.out.println("Date of birth: " + p.getBirthdate());
-		}
+		System.out.println("Social ins.no.: " + extractedPatient.getSocialInsuranceNumber());
+		System.out.println("Given name: " + extractedPatient.getGivenName());
+		System.out.println("Family Name: " + extractedPatient.getFamilyName());
+		System.out.println("Gender: " + extractedPatient.getGender());
+		System.out.println("Date of birth: " + extractedPatient.getBirthdate());
 		
 		List<Observation> extractedObservations = extractObservations(cdaFilepath);
 		
@@ -53,6 +48,7 @@ public class XMLparsingStAX
 		
 		for(Observation o : extractedObservations)
 		{
+			System.out.println();
 			System.out.println("Observation Code: " + o.getCodeCode());
 			System.out.println("Observation Code System: " + o.getCodeSystem());
 			System.out.println("Observation Code System Name: " + o.getCodeSystemName());
@@ -60,7 +56,6 @@ public class XMLparsingStAX
 			System.out.println("Observation effective time: " + o.getEffectiveTimeValue());
 			System.out.println("Observation value: " + o.getValueValue());
 			System.out.println("Observation unit: " + o.getValueUnit());
-			System.out.println();
 		}
 	}
 	
@@ -121,9 +116,8 @@ public class XMLparsingStAX
 		}
 	}
 	
-	public static List<Patient> extractPatients(String cdaFilepath)
+	public static Patient extractPatient(String cdaFilepath)
 	{
-		List<Patient> resultList = new ArrayList<Patient>(); // TODO: Consider alternatives for ArrayList
 		Patient patient = null;
 		
 		try
@@ -136,7 +130,6 @@ public class XMLparsingStAX
 				XMLEvent xmlEvent = reader.nextEvent();
 				if ( xmlEvent.isStartElement() )
 				{
-					/* TODO */ //System.out.println(xmlEvent);
 					StartElement startElement = xmlEvent.asStartElement();
 					String tagname = startElement.getName().getLocalPart();
 					
@@ -146,8 +139,7 @@ public class XMLparsingStAX
 						boolean objectIncomplete = true;
 						
 						while(objectIncomplete && reader.hasNext())
-						{//System.out.println("PING");
-						/* TODO */ //System.out.println(xmlEvent);
+						{
 							xmlEvent = reader.nextEvent();
 							if ( xmlEvent.isStartElement() )
 							{
@@ -157,12 +149,10 @@ public class XMLparsingStAX
 							switch (tagname)
 							{
 								case "id":
-									//System.out.println("ID Tag gefunden: \n" + startElement);
 									Attribute root = startElement.getAttributeByName(new QName("root"));
 									if (root != null && root.getValue().equals("1.2.40.0.10.1.4.3.1"))
 									{
 										patient.setSocialInsuranceNumber( startElement.getAttributeByName(new QName("extension")).getValue() );
-										//System.out.println("Added insurance number to patient.");
 									}
 								break;
 								
@@ -205,9 +195,6 @@ public class XMLparsingStAX
 						        }
 							}
 						}
-						
-						resultList.add(patient);
-						//System.out.println("Added a Patient to resulting List.");
 					}
 					
 				}
@@ -218,7 +205,7 @@ public class XMLparsingStAX
 			e.printStackTrace();
 		}
 		
-		return resultList;
+		return patient;
 	}
 
 	public static List<Observation> extractObservations(String cdaFilepath)
@@ -352,9 +339,9 @@ public class XMLparsingStAX
 							if ( xmlEvent.isEndElement() )
 							{
 								EndElement endElement = xmlEvent.asEndElement();
-						        if ( endElement.getName().getLocalPart().equals("observation") )
-						        {
-						        	objectIncomplete = false;
+								if ( endElement.getName().getLocalPart().equals("observation") )
+								{
+						        		objectIncomplete = false;
 						        }
 							}
 						}
