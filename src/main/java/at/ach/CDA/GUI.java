@@ -241,9 +241,9 @@ public class GUI extends JFrame {
 		panel_2.setBounds(6, 224, 651, 34);
 		BigPanel1.add(panel_2);
 		
-		JLabel LabParameter = new JLabel("Lab Parameter");
+		JLabel LabParameter = new JLabel("Lab Parameters");
 		LabParameter.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		LabParameter.setBounds(6, 6, 164, 22);
+		LabParameter.setBounds(6, 6, 200, 22);
 		panel_2.add(LabParameter);
 		LabParameter.setForeground(Color.WHITE);
 		BigPanel2 = new JPanel();
