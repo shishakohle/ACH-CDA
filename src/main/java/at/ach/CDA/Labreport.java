@@ -34,6 +34,11 @@ public class Labreport
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+	
+	public boolean hasPatient()
+	{
+		return patient != null ? true : false;
+	}
 
 	public List<Observation> getObservations() {
 		return observations;
@@ -42,6 +47,4 @@ public class Labreport
 	public void setObservations(List<Observation> observations) {
 		this.observations = observations;
 	}
-	
-	
 }
