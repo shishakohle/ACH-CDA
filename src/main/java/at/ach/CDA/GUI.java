@@ -1,5 +1,7 @@
 package at.ach.CDA;
 
+
+
 import javax.swing.*;
 import java.util.Vector;
 import javax.swing.border.EmptyBorder;
@@ -15,6 +17,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.border.BevelBorder;
 
@@ -32,9 +40,10 @@ public class GUI extends JFrame {
 	private JList list2;
 	private JTable table;
 	private JTextField textField;
-
-
-	
+	private JCheckBox[] boxes;
+	private String tests[]= {"Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH"};
+	private JPanel panel_7;
+	private ChartPanel chartPanel;
 
 	/**
 	 * Launch the application.
@@ -71,27 +80,6 @@ public class GUI extends JFrame {
 	}
 	
 
-	
-	
-	/*private class TextAreaTesting extends JList {
-		public void TestAreaTesting(TextArea a) {
-		Patient p = (Patient) list2.getSelectedValue();
-		a.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
-				"DOB: " + p.getBirthdate() + System.lineSeparator()
-				+ "Gender: " + p.getGender() + System.lineSeparator()
-				+ "Social Insurance: " + p.getSocialInsuranceNumber());}
-	}*
-	
-	
-	/*for patient info
-	 * selected patient object from list 
-	 * */
-	
-	/*
-	 * 
-	 * */
-	
-
 	/**
 	 * Create the frame.
 	 */
@@ -120,16 +108,7 @@ public class GUI extends JFrame {
 		//layeredPane.add(BigPanel1, "name_93565557549433");
 		BigPanel1.setLayout(null);
 		layeredPane.add(BigPanel1);
-		
-		
-		/*JScrollPane pane = new JScrollPane(BigPanel1, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		pane.setBounds(100, 100, 500, 500);
-		pane.setAutoscrolls(true);
-		//pane.setBounds(100, 100, 720, 700);
-		//pane.getViewport().setView(BigPanel1);
-		//pane.setVisible(true);
-		layeredPane.add(pane);*/
-		
+
 		
 		/*---- : added to the main panel #1--- */
 		
@@ -137,33 +116,7 @@ public class GUI extends JFrame {
 		JScrollPane Patient_scrollPane = new JScrollPane();
 		Patient_scrollPane.setBounds(16, 48, 139, 164);
 		
-		/*- ArrayList of Patients  -*/
-		//ArrayList<Patient> PList = new ArrayList<Patient>();
 		
-		/*for (int i = 0; i < 13; i ++) {
-			Patient p = new Patient();
-			p.setFamlilyName("testing" + i);
-			p.setGivenName("Kim" + i);
-			//p.setGender("m");
-			PList.add(p);
-		}*/
-		
-		Patient patient1 = new Patient("23424234","Dahn","Kim","F","13101991");
-		//PList.add(patient1);
-		
-		
-		//JList list = new JList(PList.toArray());
-		//list.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		
-		
-		/*for (int cnt = 0; cnt < PList.size(); cnt ++) {
-		DefaultListModel<Patient> model = new DefaultListModel<>();
-		for (Patient p : PList) {
-			model.addElement(p.toString());
-			}
-		list.setModel(model);
-		list.setSelectedIndex(0);
-		}*/
 		
 		/*-- BUTTON --*/
 		
@@ -198,7 +151,7 @@ public class GUI extends JFrame {
 		JList<Patient> list2 = new JList<>();
 		DefaultListModel<Patient> model = new DefaultListModel<>();
 		list2.setModel(model);
-		model.addElement(new Patient("234","Dahn","SMith","f","sefe" ));
+		model.addElement(new Patient("Dahn","Kim", "","",""));
 		model.addElement(new Patient("dfsf","Dahn","Kim2","g","wrewrw"));
 		
 		/*list2.getSelectionModel().addListSelectionListener(e -> {
@@ -254,154 +207,15 @@ public class GUI extends JFrame {
 		//pane.getViewport().setView(BigPanel1);
 		//pane.setVisible(true);
 		BigPanel1.add(pane);
-		CheckBoxPanel.setLayout(new GridLayout(0, 1, 0, 0));
+		CheckBoxPanel.setLayout(new GridLayout(0, 2, 0, 0));
 		
-		JPanel CBpanel_3 = new JPanel();
-		CheckBoxPanel.add(CBpanel_3);
-		CBpanel_3.setLayout(new GridLayout(0, 2, 0, 0));
+		boxes = new JCheckBox[tests.length];
+		for (int i=0; i<tests.length; i++)
+		{
+			CheckBoxMaker(i);
+			CheckBoxPanel.add(boxes[i]);
+		}
 		
-		JLabel Para1 = new JLabel("  Hämatologie - BlutBild ");
-		Para1.setFont(new Font("Lucida Grande", Font.BOLD, 12));
-		CBpanel_3.add(Para1);
-		
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		CBpanel_3.add(horizontalStrut);
-		
-		JCheckBox checkBox_1 = new JCheckBox("Leukozyten");
-		CBpanel_3.add(checkBox_1);
-		
-		JCheckBox checkBox_2 = new JCheckBox("Thrombozyten");
-		CBpanel_3.add(checkBox_2);
-		
-		JCheckBox checkBox_3 = new JCheckBox("Erythrozyten");
-		CBpanel_3.add(checkBox_3);
-		
-		JCheckBox checkBox_4 = new JCheckBox("Hämoglobin");
-		CBpanel_3.add(checkBox_4);
-		
-		JCheckBox checkBox_5 = new JCheckBox("Hämatokrit");
-		CBpanel_3.add(checkBox_5);
-		
-		JCheckBox checkBox_6 = new JCheckBox("MCH");
-		CBpanel_3.add(checkBox_6);
-		
-		JCheckBox checkBox_7 = new JCheckBox("MCV");
-		CBpanel_3.add(checkBox_7);
-		
-		JCheckBox checkBox_8 = new JCheckBox("MCHC");
-		CBpanel_3.add(checkBox_8);
-		
-		JCheckBox checkBox_9 = new JCheckBox("Akt. Lymph, rel. mikr");
-		CBpanel_3.add(checkBox_9);
-		
-		JLabel label = new JLabel("");
-		CBpanel_3.add(label);
-		
-
-		
-		JPanel CBpanel_4 = new JPanel();
-		CheckBoxPanel.add(CBpanel_4);
-		CBpanel_4.setLayout(new GridLayout(0, 2, 0, 0));
-		
-		Component horizontalStrut_1 = Box.createHorizontalStrut(20);
-		CBpanel_4.add(horizontalStrut_1);
-		
-		Component horizontalStrut_2 = Box.createHorizontalStrut(20);
-		CBpanel_4.add(horizontalStrut_2);
-		
-		JLabel Para2 = new JLabel("  Hämatologie - Knochenmark Morphologie ");
-		Para2.setFont(new Font("Lucida Grande", Font.BOLD, 12));
-		CBpanel_4.add(Para2);
-		
-		Component horizontalStrut_3 = Box.createHorizontalStrut(20);
-		CBpanel_4.add(horizontalStrut_3);
-		
-		JCheckBox checkBox_10 = new JCheckBox("Lymphozyten rel. /KM");
-		CBpanel_4.add(checkBox_10);
-		
-		JCheckBox checkBox_11 = new JCheckBox("Blasten rel. /KM");
-		CBpanel_4.add(checkBox_11);
-		
-		JCheckBox checkBox_12 = new JCheckBox("Eosinophile pro 100 Zellen /KM");
-		CBpanel_4.add(checkBox_12);
-		
-		JPanel CBpanel_5 = new JPanel();
-		CheckBoxPanel.add(CBpanel_5);
-		CBpanel_5.setLayout(new GridLayout(0, 2, 0, 0));
-		
-		Component horizontalStrut_4 = Box.createHorizontalStrut(20);
-		CBpanel_5.add(horizontalStrut_4);
-		
-		Component horizontalStrut_5 = Box.createHorizontalStrut(20);
-		CBpanel_5.add(horizontalStrut_5);
-		
-		JLabel Para3 = new JLabel("  Hämostaseologie - Hämostaseologie Globaltest ");
-		Para3.setFont(new Font("Lucida Grande", Font.BOLD, 12));
-		CBpanel_5.add(Para3);
-		
-		Component horizontalStrut_6 = Box.createHorizontalStrut(20);
-		CBpanel_5.add(horizontalStrut_6);
-		
-		JCheckBox checkBox_13 = new JCheckBox("PTZ(prothrombinz.)");
-		CBpanel_5.add(checkBox_13);
-		
-		JCheckBox checkBox_14 = new JCheckBox("INR");
-		CBpanel_5.add(checkBox_14);
-		
-		JCheckBox checkBox_15 = new JCheckBox("aPTT");
-		CBpanel_5.add(checkBox_15);
-		
-		JCheckBox checkBox_16 = new JCheckBox("AT III Aktivität");
-		CBpanel_5.add(checkBox_16);
-		
-		JCheckBox checkBox_17 = new JCheckBox("D-Dimer");
-		CBpanel_5.add(checkBox_17);
-		
-		JPanel CBpanel_6 = new JPanel();
-		CheckBoxPanel.add(CBpanel_6);
-		CBpanel_6.setLayout(new GridLayout(0, 2, 0, 0));
-		
-		Component horizontalStrut_7 = Box.createHorizontalStrut(20);
-		CBpanel_6.add(horizontalStrut_7);
-		
-		Component horizontalStrut_8 = Box.createHorizontalStrut(20);
-		CBpanel_6.add(horizontalStrut_8);
-		
-		JLabel Para4 = new JLabel("  Hämostaseologie - Einzelfaktoranalysen");
-		Para4.setFont(new Font("Lucida Grande", Font.BOLD, 12));
-		CBpanel_6.add(Para4);
-		
-		Component horizontalStrut_9 = Box.createHorizontalStrut(20);
-		CBpanel_6.add(horizontalStrut_9);
-		
-		JCheckBox checkBox_18 = new JCheckBox("Faktor VII Akt.");
-		CBpanel_6.add(checkBox_18);
-		
-		JCheckBox checkBox_19 = new JCheckBox("Faktor VIII Akt.");
-		CBpanel_6.add(checkBox_19);
-		
-		JPanel CBpanel_7 = new JPanel();
-		CheckBoxPanel.add(CBpanel_7);
-		CBpanel_7.setLayout(new GridLayout(0, 2, 0, 0));
-		
-		Component horizontalStrut_10 = Box.createHorizontalStrut(20);
-		CBpanel_7.add(horizontalStrut_10);
-		
-		Component horizontalStrut_11 = Box.createHorizontalStrut(20);
-		CBpanel_7.add(horizontalStrut_11);
-		
-		JLabel Para5 = new JLabel("  Hämostaseologie - Thromobophilie Tests");
-		Para5.setFont(new Font("Lucida Grande", Font.BOLD, 12));
-		CBpanel_7.add(Para5);
-		
-		Component horizontalStrut_12 = Box.createHorizontalStrut(20);
-		CBpanel_7.add(horizontalStrut_12);
-		
-		JCheckBox checkBox_20 = new JCheckBox("Protein C Aktivität");
-		CBpanel_7.add(checkBox_20);
-		
-		JCheckBox checkBox_21 = new JCheckBox("Protein S Aktivität");
-		CBpanel_7.add(checkBox_21);
 		
 		
 		/*-- Panels --*/
@@ -496,6 +310,37 @@ public class GUI extends JFrame {
 			}		
 		});
 		BigPanel2.add(button3);
+		
+		JPanel panel_7 = new JPanel();
+		panel_7.setBounds(10, 157, 628, 282);
+		BigPanel2.add(panel_7);
+		panel_7.setLayout(new BoxLayout(panel_7, BoxLayout.X_AXIS));
+		
+		/***
+		 * GRAPH
+		 * **/
+		
+		final XYSeries series = new XYSeries("My Chocolate value");
+		Observation ob = new Observation("","","","","2020","","120");
+		
+	    series.add(Integer.parseInt(ob.getEffectiveTimeValue()), Integer.parseInt(ob.getValueValue()));
+	    series.add(19951313, 200);
+	    series.add(20201113, 100.0);
+	  
+	    final XYSeriesCollection data = new XYSeriesCollection(series);
+	    final JFreeChart chart = ChartFactory.createXYLineChart(
+	        "My Chocolate value",
+	        "Date", 
+	        "Value", 
+	        data,
+	        PlotOrientation.VERTICAL,
+	        true,
+	        true,
+	        false);
+	    final ChartPanel chartPanel = new ChartPanel(chart);
+	    chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+	    
+		
 		
 		/*-- Page 3 --*/
 		
@@ -647,10 +492,19 @@ public class GUI extends JFrame {
 			}
 		});
 		
-		BigPanel3.add(btnAdd);
-		
-	
-		
+		BigPanel3.add(btnAdd);	
 
+	}
+	
+	public void CheckBoxMaker(int i) {
+		boxes[i] = new JCheckBox(tests[i]);
+		
+	}
+	
+	public void printSelectedNames(JCheckBox[] boxes) {
+
+	    for(JCheckBox box : boxes)
+	        if(box.isSelected())
+	        	panel_7.add(chartPanel);
 	}
 }
