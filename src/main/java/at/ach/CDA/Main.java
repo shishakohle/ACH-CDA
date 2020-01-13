@@ -1,6 +1,6 @@
 /* An application that juggles with CDA labreports.
  * 
- *  Written by Daeun Kim and Ingo Weigel.
+ *  Written by Ingo Weigel and Daeun Kim.
  *  January 14th, 2020
  *  
  *  Find this project on GitHub: https://github.com/shishakohle/ACH-CDA
