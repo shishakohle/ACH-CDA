@@ -337,6 +337,7 @@ public class GUI extends JFrame {
 	        false);
 	    final ChartPanel chartPanel = new ChartPanel(chart);
 	    chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+	    panel_7.add(chartPanel);
 	    
 		
 		
