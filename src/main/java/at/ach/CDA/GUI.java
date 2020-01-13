@@ -1,17 +1,21 @@
 package at.ach.CDA;
 
 import javax.swing.*;
+import java.util.Vector;
 import javax.swing.border.EmptyBorder;
-import javax.swing.DefaultListCellRenderer;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+
+
 import javax.swing.border.BevelBorder;
 
 public class GUI extends JFrame {
@@ -26,6 +30,10 @@ public class GUI extends JFrame {
 	private JTextArea textArea2;
 	private JTextArea textArea3;
 	private JList list2;
+	private JTable table;
+	private JTextField textField;
+
+
 	
 
 	/**
@@ -63,10 +71,32 @@ public class GUI extends JFrame {
 	}
 	
 
+	
+	
+	/*private class TextAreaTesting extends JList {
+		public void TestAreaTesting(TextArea a) {
+		Patient p = (Patient) list2.getSelectedValue();
+		a.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
+				"DOB: " + p.getBirthdate() + System.lineSeparator()
+				+ "Gender: " + p.getGender() + System.lineSeparator()
+				+ "Social Insurance: " + p.getSocialInsuranceNumber());}
+	}*
+	
+	
+	/*for patient info
+	 * selected patient object from list 
+	 * */
+	
+	/*
+	 * 
+	 * */
+	
+
 	/**
 	 * Create the frame.
 	 */
 	public GUI() {
+		setTitle("Ingo & Dahn Healthcare co");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 667, 670); //(100, 100, 667, 459)
 		contentPane = new JPanel();
@@ -87,16 +117,21 @@ public class GUI extends JFrame {
 		BigPanel1.setBackground(Color.WHITE);
 		BigPanel1.setBorder(null);
 		BigPanel1.setAlignmentX(Component.LEFT_ALIGNMENT);
-	
+		//layeredPane.add(BigPanel1, "name_93565557549433");
 		BigPanel1.setLayout(null);
 		layeredPane.add(BigPanel1);
 		
 		
-	
+		/*JScrollPane pane = new JScrollPane(BigPanel1, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		pane.setBounds(100, 100, 500, 500);
+		pane.setAutoscrolls(true);
+		//pane.setBounds(100, 100, 720, 700);
+		//pane.getViewport().setView(BigPanel1);
+		//pane.setVisible(true);
+		layeredPane.add(pane);*/
 		
-		/**
-		 * ---- ## Page 1 ##--- 
-		 * */
+		
+		/*---- : added to the main panel #1--- */
 		
 		/*Scrolled list of Patients*/
 		JScrollPane Patient_scrollPane = new JScrollPane();
@@ -113,7 +148,7 @@ public class GUI extends JFrame {
 			PList.add(p);
 		}*/
 		
-		Patient patient1 = new Patient("23424234","Dahn","Kim","F","13101991"); //testing
+		Patient patient1 = new Patient("23424234","Dahn","Kim","F","13101991");
 		//PList.add(patient1);
 		
 		
@@ -160,11 +195,10 @@ public class GUI extends JFrame {
 		BigPanel1.add(b2);
 		b2.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		
-		
 		JList<Patient> list2 = new JList<>();
 		DefaultListModel<Patient> model = new DefaultListModel<>();
 		list2.setModel(model);
-		model.addElement(new Patient("13234","Dahn","Kim","f","12312"));
+		model.addElement(new Patient("234","Dahn","SMith","f","sefe" ));
 		model.addElement(new Patient("dfsf","Dahn","Kim2","g","wrewrw"));
 		
 		/*list2.getSelectionModel().addListSelectionListener(e -> {
@@ -263,7 +297,7 @@ public class GUI extends JFrame {
 		JLabel label = new JLabel("");
 		CBpanel_3.add(label);
 		
-		/*- Lab Parameter Selection Components: JCheckBox -*/
+
 		
 		JPanel CBpanel_4 = new JPanel();
 		CheckBoxPanel.add(CBpanel_4);
@@ -395,11 +429,6 @@ public class GUI extends JFrame {
 		panel_2.setBounds(6, 224, 651, 34);
 		BigPanel1.add(panel_2);
 		
-		
-		/**
-		 * ----- Page 2 -------
-		 * **/
-		
 		JLabel LabParameter = new JLabel("Lab Parameter");
 		LabParameter.setFont(new Font("Myriad Pro", Font.BOLD, 20));
 		LabParameter.setBounds(6, 6, 164, 22);
@@ -468,17 +497,13 @@ public class GUI extends JFrame {
 		});
 		BigPanel2.add(button3);
 		
-		/**-- Page 3 --**/
+		/*-- Page 3 --*/
 		
 		BigPanel3 = new JPanel();
 		BigPanel3.setBackground(Color.WHITE);
 		layeredPane.add(BigPanel3, "name_100020660159536");
 		BigPanel3.setLayout(null);
-		
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 150, 641, 436);
-		BigPanel3.add(scrollPane);
+	
 		
 		JTextArea textArea_3 = new JTextArea();
 		list2.addListSelectionListener(new ListSelectionListener() {
@@ -548,6 +573,84 @@ public class GUI extends JFrame {
 		});
 		btnNewBack.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		
+		//table setup
+		JTable table = new JTable();
+				
+		//a table model creation 
+		String[] columns = {"ID", "Value", "unit"};
+		DefaultTableModel Tmodel = new DefaultTableModel();
+		Tmodel.setColumnIdentifiers(columns);
+				
+		//set the model to the table
+		table.setModel(Tmodel);
+				
+		//table visual setup
+		table.setBackground(Color.LIGHT_GRAY);
+		table.setForeground(Color.BLACK);
+		Font font = new Font("", 1,22);
+		table.setFont(font);
+		table.setRowHeight(30);
+				
+		//create JScrollPane
+		JScrollPane Spane = new JScrollPane(table);
+		Spane.setBounds(10, 216, 400, 300);
+		BigPanel3.add(Spane);
+
 		
+		JLabel lblNewLabel = new JLabel("Parameter");
+		lblNewLabel.setBounds(436, 228, 128, 16);
+		BigPanel3.add(lblNewLabel);
+		
+		JComboBox<String> comboBox = new JComboBox();
+		comboBox.setBounds(433, 256, 200, 27);
+		BigPanel3.add(comboBox);
+		comboBox.addItem("Leukozyten");
+		comboBox.addItem("Thrombozyten");
+		
+		
+		JLabel lblValue = new JLabel("Value");
+		lblValue.setBounds(436, 295, 61, 16);
+		BigPanel3.add(lblValue);
+		
+		textField = new JTextField();
+		textField.setBounds(434, 324, 130, 26);
+		BigPanel3.add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblUnit = new JLabel("Unit");
+		lblUnit.setBounds(436, 362, 61, 16);
+		BigPanel3.add(lblUnit);
+		
+		JComboBox<String> comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(436, 390, 118, 27);
+		BigPanel3.add(comboBox_1);
+		
+		comboBox_1.addItem("G/l");
+		comboBox_1.addItem("T/l");
+		comboBox_1.addItem("g/dl");
+		
+
+		
+		JButton btnAdd = new JButton("Add");
+		btnAdd.setBounds(434, 443, 117, 40);
+		btnAdd.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{	String[] row = new String[3];
+				row[0]=comboBox.getSelectedItem().toString();
+				row[1]=textField.getText();
+				row[2]=comboBox_1.getSelectedItem().toString();
+				
+				//add row to the model
+				Tmodel.addRow(row);
+			}
+		});
+		
+		BigPanel3.add(btnAdd);
+		
+	
+		
+
 	}
 }
