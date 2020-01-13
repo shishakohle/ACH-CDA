@@ -46,6 +46,22 @@ public class XMLparsingStAX
 			System.out.println("Gender: " + p.getGender());
 			System.out.println("Date of birth: " + p.getBirthdate());
 		}
+		
+		List<Observation> extractedObservations = extractObservations(cdaFilepath);
+		
+		System.out.println("Extracted observations: " + extractedObservations.size());
+		
+		for(Observation o : extractedObservations)
+		{
+			System.out.println("Observation Code: " + o.getCodeCode());
+			System.out.println("Observation Code System: " + o.getCodeSystem());
+			System.out.println("Observation Code System Name: " + o.getCodeSystemName());
+			System.out.println("Observation display name: " + o.getDisplayName());
+			System.out.println("Observation effective time: " + o.getEffectiveTimeValue());
+			System.out.println("Observation value: " + o.getValueValue());
+			System.out.println("Observation unit: " + o.getValueUnit());
+			System.out.println();
+		}
 	}
 	
 	public static void OLDmain(String[] args)
@@ -192,6 +208,158 @@ public class XMLparsingStAX
 						
 						resultList.add(patient);
 						//System.out.println("Added a Patient to resulting List.");
+					}
+					
+				}
+			}
+		}
+		catch (FileNotFoundException | XMLStreamException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return resultList;
+	}
+
+	public static List<Observation> extractObservations(String cdaFilepath)
+	{
+		List<Observation> resultList = new ArrayList<Observation>(); // TODO: Consider alternatives for ArrayList
+		Observation observation = null;
+		
+		try
+		{
+			XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+			XMLEventReader reader = xmlInputFactory.createXMLEventReader(new FileInputStream(cdaFilepath));
+			
+			while ( reader.hasNext() )
+			{
+				XMLEvent xmlEvent = reader.nextEvent();
+				if ( xmlEvent.isStartElement() )
+				{
+					StartElement startElement = xmlEvent.asStartElement();
+					String tagname = startElement.getName().getLocalPart();
+					
+					if(tagname.contentEquals("observation"))
+					{
+						observation = new Observation();
+						boolean objectIncomplete = true;
+						
+						while(objectIncomplete && reader.hasNext())
+						{
+							xmlEvent = reader.nextEvent();
+							if ( xmlEvent.isStartElement() )
+							{
+								startElement = xmlEvent.asStartElement();
+								tagname = startElement.getName().getLocalPart();
+								
+							switch (tagname)
+							{
+								/* private String codeCode;
+								private String codeSystem;
+								private String codeSystemName;
+								private String displayName;
+								private String effectiveTimeValue;
+								private String valueUnit;
+								private String valueValue; */
+								
+								case "code":
+									Attribute code =           startElement.getAttributeByName(new QName("code"));
+									Attribute codeSystem =     startElement.getAttributeByName(new QName("codeSystem"));
+									Attribute codeSystemName = startElement.getAttributeByName(new QName("codeSystemName"));
+									Attribute displayName =    startElement.getAttributeByName(new QName("displayName"));
+									Attribute codeNullFlavor = startElement.getAttributeByName(new QName("nullFlavor"));
+									
+									/* old code (no check for nullFlavors, no check for LOINC:Annotation Comment
+									if(code!=null)           observation.setCodeCode(code.getValue());
+									if(codeSystem!=null)     observation.setCodeSystem(codeSystem.getValue());
+									if(codeSystemName!=null) observation.setCodeSystemName(codeSystemName.getValue());
+									if(displayName!=null)    observation.setDisplayName(displayName.getValue());
+									*/
+									
+									if (codeNullFlavor != null)
+									{
+										boolean nullFlavorCodeIncomplete=true;
+										
+										while(reader.hasNext() && nullFlavorCodeIncomplete)
+										{
+											xmlEvent = reader.nextEvent();
+											
+											if (xmlEvent.isStartElement())
+											{
+												startElement = xmlEvent.asStartElement();
+												if ( startElement.getName().getLocalPart().equals("translation") )
+												{
+													code =           startElement.getAttributeByName(new QName("code"));
+													codeSystem =     startElement.getAttributeByName(new QName("codeSystem"));
+													codeSystemName = startElement.getAttributeByName(new QName("codeSystemName"));
+													displayName =    startElement.getAttributeByName(new QName("displayName")); 
+												}
+											}
+											
+											if (xmlEvent.isEndElement())
+											{
+												EndElement endElement = xmlEvent.asEndElement();
+										        if ( endElement.getName().getLocalPart().equals("translation") )
+										        {
+										        	nullFlavorCodeIncomplete = false;
+										        }
+											}
+										}
+									}
+									
+									String strCode = null;
+									String strCodeSystem=null;
+									String strCodeSystemName = null;
+									String strDisplayName = null;
+									
+									if(code!=null) strCode = code.getValue();
+									if(codeSystem!=null) strCodeSystem = codeSystem.getValue();
+									if(codeSystemName!=null) strCodeSystemName = codeSystemName.getValue();
+									if(displayName!=null) strDisplayName = displayName.getValue();
+									
+									// if codepage is "LOINC" and code is "Annotation Comment"
+									if ( strCodeSystem!=null
+											&& strCode!=null
+											&& strCodeSystem.equals(/*LOINC*/"2.16.840.1.113883.6.1")
+											&& strCode.equals(/*Annotation Comment*/"48767-8") )
+									{
+										// Do not add any of these data to observation.
+									}
+									else
+									{
+										if(strCode!=null)           observation.setCodeCode(strCode);
+										if(strCodeSystem!=null)     observation.setCodeSystem(strCodeSystem);
+										if(strCodeSystemName!=null) observation.setCodeSystemName(strCodeSystemName);
+										if(strDisplayName!=null)    observation.setDisplayName(strDisplayName);
+									}
+									
+								break;
+								
+								case "effectiveTime":
+									Attribute effectiveTime = startElement.getAttributeByName(new QName("value"));
+									if (effectiveTime!=null) observation.setEffectiveTimeValue(effectiveTime.getValue());
+								break;
+								
+								case "value":
+									Attribute unit = startElement.getAttributeByName(new QName("unit"));
+									Attribute value = startElement.getAttributeByName(new QName("value"));
+									if (unit!=null) observation.setValueUnit(unit.getValue());
+									if (value!=null) observation.setValueValue(value.getValue());
+								break;
+							}
+							}
+							
+							if ( xmlEvent.isEndElement() )
+							{
+								EndElement endElement = xmlEvent.asEndElement();
+						        if ( endElement.getName().getLocalPart().equals("observation") )
+						        {
+						        	objectIncomplete = false;
+						        }
+							}
+						}
+						
+						resultList.add(observation);
 					}
 					
 				}
