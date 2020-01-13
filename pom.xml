@@ -22,12 +22,19 @@
 			<artifactId>jdom2</artifactId>
 			<version>2.0.6</version>
 		</dependency>
-		
+
 		<dependency>
-    		<groupId>jfree</groupId>
-    		<artifactId>jfreechart</artifactId>
-    		<version>1.0.13</version>
+			<groupId>jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.13</version>
 		</dependency>
 	</dependencies>
 
+	<description>An application that juggles with CDA labreports.
+
+Written by Ingo Weigel and Daeun Kim.
+January 14th, 2020
+
+This project was carried out in the &quot;Applications for Crowdsourced Healthcare&quot; course at University of Applied Sciences Technikum Wien (Vienna, Austria) under the guidance of lecturer Matthias Frohner, PhD, MSc.</description>
+	<url>https://github.com/shishakohle/ACH-CDA</url>
 </project>

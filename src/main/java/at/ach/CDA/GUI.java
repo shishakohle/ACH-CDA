@@ -43,7 +43,7 @@ public class GUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GUI frame = new GUI();
+					GUI frame = new GUI(new ArrayList<Patient>());
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -95,7 +95,7 @@ public class GUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GUI() {
+	public GUI(List<Patient> patients) {
 		setTitle("Ingo & Dahn Healthcare co");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 667, 670); //(100, 100, 667, 459)
@@ -148,7 +148,7 @@ public class GUI extends JFrame {
 			PList.add(p);
 		}*/
 		
-		Patient patient1 = new Patient("23424234","Dahn","Kim","F","13101991");
+		Patient patient1 = new Patient("23424234","Dahn","Kim","F","13101991"); // TODO to Dahn: Is this line still in use? best, Ingo
 		//PList.add(patient1);
 		
 		
@@ -198,8 +198,12 @@ public class GUI extends JFrame {
 		JList<Patient> list2 = new JList<>();
 		DefaultListModel<Patient> model = new DefaultListModel<>();
 		list2.setModel(model);
-		model.addElement(new Patient("234","Dahn","SMith","f","sefe" ));
-		model.addElement(new Patient("dfsf","Dahn","Kim2","g","wrewrw"));
+		// model.addElement(new Patient("234","Dahn","SMith","f","sefe" ));
+		// model.addElement(new Patient("dfsf","Dahn","Kim2","g","wrewrw"));
+		for (Patient patient : patients)
+		{
+			model.addElement(patient);
+		}
 		
 		/*list2.getSelectionModel().addListSelectionListener(e -> {
 			Patient p = list2.getSelectedValue();

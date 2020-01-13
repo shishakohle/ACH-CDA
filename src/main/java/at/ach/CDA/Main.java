@@ -12,6 +12,7 @@
 
 package at.ach.CDA;
 
+import java.awt.EventQueue;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Main
 	
 	public static void main(String[] args)
 	{
-		System.out.println("ACH-CDA: An An application that juggles with CDA labreports.");
+		System.out.println("ACH-CDA: An application that juggles with CDA labreports.");
 		
 		// extract all Labreports
 		
@@ -48,7 +49,7 @@ public class Main
 					Labreport labreport = new Labreport(file.getAbsolutePath());
 					if ( labreport.hasPatient() )
 					{
-						System.out.println("Parsed labreport for patient "+ labreport.getPatient().getFamilyName() + " with " + labreport.getObservations().size() + " observations.");
+						System.out.println("Parsed labreport for patient " + labreport.getPatient().getFamilyName() + " with " + labreport.getObservations().size() + " observations.");
 						labreports.add(labreport);
 					}
 					else
@@ -65,6 +66,33 @@ public class Main
 		{
 		    System.out.println("Could not find directory: " + cdaDirectory);
 		}
+		
+		// create list of Patients and associate their labreports with em
+		
+		// ... TODO ...
+		List<Patient> patients = new ArrayList<Patient>();
+		for (Labreport labreport : labreports)
+		{
+			// TODO: check whether this Patient already has been added to the list
+			patients.add( labreport.getPatient() );
+		}
+		
+		// start the GUI and hand over the Patients
+		
+		EventQueue.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					GUI frame = new GUI(patients);
+					frame.setVisible(true);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		System.out.println("Quit application. Bye.");
 	}
