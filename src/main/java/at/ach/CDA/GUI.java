@@ -24,6 +24,8 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -55,7 +57,7 @@ public class GUI extends JFrame {
 	private ChartPanel chartPanel;
 	private List<CodedLabparameter> SelectedList = new ArrayList<CodedLabparameter>();
 	private Map<JCheckBox,CodedLabparameter> checkBoxMap = new HashMap<JCheckBox, CodedLabparameter>();
-
+	private Map<JComboBox,CodedLabparameter> comboBoxMap = new HashMap<JComboBox, CodedLabparameter>();
 	/**
 	 * Launch the application.
 	 */
@@ -397,8 +399,15 @@ public class GUI extends JFrame {
 		JComboBox<String> comboBox = new JComboBox();
 		comboBox.setBounds(433, 256, 200, 27);
 		BigPanel3.add(comboBox);
-		comboBox.addItem("Leukozyten");
-		comboBox.addItem("Thrombozyten");
+		
+
+		for(CodedLabparameter test : tests)
+		{	
+			comboBox.addItem(test.getDisplayName());
+			comboBoxMap.put(comboBox,test);
+		
+		}
+
 		
 		
 		JLabel lblValue = new JLabel("Value");
@@ -417,6 +426,14 @@ public class GUI extends JFrame {
 		JComboBox<String> comboBox_1 = new JComboBox<String>();
 		comboBox_1.setBounds(436, 390, 118, 27);
 		BigPanel3.add(comboBox_1);
+		
+		//TODO: once you set value unit in 'CDALabreportParser', can you please enable this
+		
+		
+		/*for (CodedLabparameter test: tests) {
+			comboBox_1.addItem(test.getValueUnit());
+			comboBoxMap.put(comboBox_1, test);
+		}*/
 		
 		comboBox_1.addItem("G/l");
 		comboBox_1.addItem("T/l");
@@ -439,6 +456,18 @@ public class GUI extends JFrame {
 				Tmodel.addRow(row);
 			}
 		});
+		
+		table.getModel().addTableModelListener(new TableModelListener(){
+			
+			public void tableChanged(TableModelEvent e) {
+				
+				for (int i = 0; i<table.getRowCount(); i++){
+					for (int j = 0; j<table.getColumnCount(); j++){
+						ArrayList testing = new ArrayList();
+						testing.add((String)table.getModel().getValueAt(i, j));
+						System.out.println(testing);
+					}}}});
+
 		
 		BigPanel3.add(btnAdd);	
 
