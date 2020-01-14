@@ -15,7 +15,9 @@ package at.ach.CDA;
 import java.awt.EventQueue;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /* This "Main" Class contains the main()
  * to be executed to run the application.
@@ -32,9 +34,11 @@ public class Main
 	{
 		System.out.println("ACH-CDA: An application that juggles with CDA labreports.");
 		
-		// extract all Labreports
+		// extract all Labreports and map social insurance number to labreports and to patients
 		
 		List<Labreport> labreports = new ArrayList<Labreport>();
+		Map<String,List<Labreport>> mappedLabreports = new HashMap<String,List<Labreport>>();
+		Map<String,Patient>         mappedPatients   = new HashMap<String,Patient>();
 		
 		File cdaDir = new File(cdaDirectory);
 		File[] files = cdaDir.listFiles();
@@ -50,7 +54,28 @@ public class Main
 					if ( labreport.hasPatient() )
 					{
 						System.out.println("Parsed labreport for patient " + labreport.getPatient().getFamilyName() + " with " + labreport.getObservations().size() + " observations.");
+						
 						labreports.add(labreport);
+						
+						String insuranceNumber = labreport.getPatient().getSocialInsuranceNumber();
+						
+						mappedPatients.put(insuranceNumber, labreport.getPatient());
+						
+						List<Labreport> associatedReports = null;
+						if( mappedLabreports.containsKey(insuranceNumber) )
+						{
+							associatedReports = mappedLabreports.get(insuranceNumber);
+						}
+						else
+						{
+							associatedReports = new ArrayList<Labreport>();
+						}
+						
+						if (associatedReports != null)
+						{
+							associatedReports.add(labreport);
+							mappedLabreports.put(insuranceNumber, associatedReports);
+						}
 					}
 					else
 					{
@@ -67,16 +92,6 @@ public class Main
 		    System.out.println("Could not find directory: " + cdaDirectory);
 		}
 		
-		// create list of Patients and associate their labreports with em
-		
-		// ... TODO ...
-		List<Patient> patients = new ArrayList<Patient>();
-		for (Labreport labreport : labreports)
-		{
-			// TODO: check whether this Patient already has been added to the list
-			patients.add( labreport.getPatient() );
-		}
-		
 		// start the GUI and hand over the Patients
 		
 		EventQueue.invokeLater(new Runnable()
@@ -85,7 +100,7 @@ public class Main
 			{
 				try
 				{
-					GUI frame = new GUI(patients);
+					GUI frame = new GUI(mappedPatients, mappedLabreports);
 					frame.setVisible(true);
 				}
 				catch (Exception e) {

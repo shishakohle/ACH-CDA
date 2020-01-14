@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -45,7 +46,7 @@ public class GUI extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -56,7 +57,7 @@ public class GUI extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	public void switchPanels(JPanel panel)
 	{
@@ -80,7 +81,7 @@ public class GUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GUI(List<Patient> patients) {
+	public GUI(Map<String,Patient> mappedPatients, Map<String,List<Labreport>> mappedLabreports) {
 		setTitle("Ingo & Dahn Healthcare co");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 667, 670); //(100, 100, 667, 459)
@@ -146,7 +147,7 @@ public class GUI extends JFrame {
 		JList<Patient> list2 = new JList<>();
 		DefaultListModel<Patient> model = new DefaultListModel<>();
 		list2.setModel(model);
-		for (Patient patient : patients)
+		for (Patient patient : mappedPatients.values())
 		{
 			model.addElement(patient);
 		}
