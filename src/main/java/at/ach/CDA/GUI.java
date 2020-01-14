@@ -229,6 +229,7 @@ public class GUI extends JFrame {
 		// read CodedLabparameters from catalogue file
 		tests = CDALabreportParser.extractCodedLabparameters("/home/ingo/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
 		//tests = CDALabreportParser.extractCodedLabparameters("/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
+		//tests = CDALabreportParser.extractCodedLabparameters("U:\\git\\ACH-CDA\\src\\main\\resources\\cda\\labreport0.cda");
 		System.out.println("The GUI extracted " + tests.size() + " CodedLabparameters from catalogue file.");
 		
 		for(CodedLabparameter test : tests)
@@ -560,7 +561,7 @@ public class GUI extends JFrame {
 		
 		List<CodedLabparameter> parametersToPlot = new ArrayList<CodedLabparameter>();
 		
-		//for(int i=0; i<4; i++)
+		/*//for(int i=0; i<4; i++)
 		for (int i=0; i < SelectedList.size(); i++)
 		{
 			if (i<SelectedList.size())
@@ -569,17 +570,22 @@ public class GUI extends JFrame {
 			}
 		}
 		
-		// as for now (see TODO above), hardcoded number of plots is four
+		// as for now (see TODO above), hardcoded number of plots is four*/
 		
 		List<Labreport> thePatientsLabreports = mappedLabreports.get( selectedPatient.getSocialInsuranceNumber() );
 		
-		for (int i=0; i < parametersToPlot.size(); i++)
+		/*for (int i=0; i < parametersToPlot.size(); i++)
 		{
 			if ( !parametersToPlot.isEmpty())	
 			{
 				panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0))); 
 				
 			}
+		}*/
+		
+		for (CodedLabparameter parameter : SelectedList)
+		{
+			panel_7.add( getPlotFromLabreports(thePatientsLabreports,parameter) );
 		}
 		
 		return BigPanel2;

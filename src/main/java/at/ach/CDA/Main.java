@@ -30,6 +30,9 @@ public class Main
 	// This is the improvised path (applying to Ingo's machine)
 	private static String cdaDirectory = "/home/ingo/git/ACH-CDA/src/main/resources/cda/";
 	
+	// This is the improvised path (applying to Ingo's office workstation)
+//	private static String cdaDirectory = "U:\\git\\ACH-CDA\\src\\main\\resources\\cda\\";
+	
 	public static void main(String[] args)
 	{
 		System.out.println("ACH-CDA: An application that juggles with CDA labreports.\n");
