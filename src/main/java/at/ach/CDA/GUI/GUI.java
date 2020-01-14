@@ -41,38 +41,21 @@ public class GUI extends JFrame {
 
 	private JPanel contentPane;
 	private JLayeredPane layeredPane;
-	private JPanel BigPanel1;
-	private JPanel BigPanel2;
-	private JPanel BigPanel3;
+	private JPanel page1;
+	private JPanel page2;
+	private JPanel page3;
 	private final Action action = new SwingAction();
-	private JTextArea textArea;
-	private JTextArea textArea2;
-	private JTextArea textArea3;
-	private JList<Patient> list2 = new JList<Patient>();
-	private JTable table;
-	private JTextField textField;
-	//private String tests[]= {"Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH", "Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH", "Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH", "Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH"};
-	private List<CodedLabparameter> tests = new ArrayList<CodedLabparameter>();
-	private JPanel panel_7;
-	private ChartPanel chartPanel;
-	private List<CodedLabparameter> SelectedList = new ArrayList<CodedLabparameter>();
+	private JTextArea patientInfoDisplayPage1;
+	private JList<Patient> patientList = new JList<Patient>();
+	private JTextField labValueField;
+	private List<CodedLabparameter> parameterList = new ArrayList<CodedLabparameter>();
+	private List<CodedLabparameter> selectedList = new ArrayList<CodedLabparameter>();
 	private Map<JCheckBox,CodedLabparameter> checkBoxMap = new HashMap<JCheckBox, CodedLabparameter>();
 	private Map<JComboBox,CodedLabparameter> comboBoxMap = new HashMap<JComboBox, CodedLabparameter>();
 	/**
 	 * Launch the application.
 	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI frame = new GUI(new ArrayList<Patient>());
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
+	
 
 	public void switchPanels(JPanel panel)
 	{
@@ -83,12 +66,12 @@ public class GUI extends JFrame {
 		layeredPane.revalidate();
 		
 		System.out.println("GUI switched to another page. " + (
-				SelectedList.isEmpty() ?
+				selectedList.isEmpty() ?
 				"No checkboxes were checked recently." :
 				"These checkboxes were checked recently:" )
 				);
 		
-		for (CodedLabparameter checkbox : SelectedList)
+		for (CodedLabparameter checkbox : selectedList)
 		{
 			System.out.println("\t" + checkbox.getCodeSystemName() + " : " + checkbox.getDisplayName());
 		}
@@ -108,6 +91,7 @@ public class GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public GUI(Map<String,Patient> mappedPatients, Map<String,List<Labreport>> mappedLabreports) {
+		
 		// start GUI config
 		setTitle("Ingo & Dahn Healthcare co");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -125,14 +109,18 @@ public class GUI extends JFrame {
 		contentPane.add(layeredPane, "name_92778199354778");
 		layeredPane.setLayout(new CardLayout(0, 0));
 		
-		BigPanel1 = new JPanel();
-		BigPanel1.setBounds(100, 100, 720, 700);
-		BigPanel1.setBackground(Color.WHITE);
-		BigPanel1.setBorder(null);
-		BigPanel1.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		
+		/*---- Page 1 Layout ----*/	
+		
+		page1 = new JPanel();
+		page1.setBounds(100, 100, 720, 700);
+		page1.setBackground(Color.WHITE);
+		page1.setBorder(null);
+		page1.setAlignmentX(Component.LEFT_ALIGNMENT);
 		//layeredPane.add(BigPanel1, "name_93565557549433");
-		BigPanel1.setLayout(null);
-		layeredPane.add(BigPanel1);
+		page1.setLayout(null);
+		layeredPane.add(page1);
 
 		
 		/*---- : added to the main panel #1--- */
@@ -143,101 +131,99 @@ public class GUI extends JFrame {
 		
 		/*-- BUTTON --*/
 		
-		JButton b1 = new JButton("Show graph");
+		JButton showGraphButton = new JButton("Show graph");
 		//b1.setAction(action);
-		b1.setEnabled(false);
-		b1.addActionListener(new ActionListener() {
+		showGraphButton.setEnabled(false);
+		showGraphButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//switchPanels(BigPanel2);
 				switchPanels(page2(mappedLabreports));
 			}		
 		});
-		b1.setBounds(445, 70, 126, 40);
-		BigPanel1.add(b1);
-		b1.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		showGraphButton.setBounds(445, 70, 126, 40);
+		page1.add(showGraphButton);
+		showGraphButton.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		
-		JButton b2 = new JButton("Add Lab report");
-		b2.setEnabled(false);
-		b2.setForeground(Color.BLACK);
-		b2.setBackground(new Color(102, 204, 255));
+		JButton addLabReportButton = new JButton("Add Lab report");
+		addLabReportButton.setEnabled(false);
+		addLabReportButton.setForeground(Color.BLACK);
+		addLabReportButton.setBackground(new Color(102, 204, 255));
 		//b1.setAction(action);
-		b2.addActionListener(new ActionListener() {
+		addLabReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(BigPanel3);	
+				switchPanels(page3);	
 			}
 			
 		});
 		
-		b2.setBounds(445, 122, 126, 40);
-		BigPanel1.add(b2);
-		b2.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		
-		DefaultListModel<Patient> model = new DefaultListModel<>();
-		list2.setModel(model);
+		addLabReportButton.setBounds(445, 122, 126, 40);
+		page1.add(addLabReportButton);
+		addLabReportButton.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+	
+		/*---- Patient List from extracted patient profiles / CDA  ----*/
+		
+		DefaultListModel<Patient> patientListModel = new DefaultListModel<>();
+		patientList.setModel(patientListModel);
 		for (Patient patient : mappedPatients.values())
 		{
-			model.addElement(patient);
+			patientListModel.addElement(patient);
 		}
 		
 		
 		
-		Patient_scrollPane.getViewport().setView(list2);
-		BigPanel1.add(Patient_scrollPane);
+		Patient_scrollPane.getViewport().setView(patientList);
+		page1.add(Patient_scrollPane);
 		
 		
 		/*--Patient Info--*/
-		textArea = new JTextArea();
-		textArea.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		textArea.setText("Choose the patient");
-		textArea.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		textArea.setBackground(SystemColor.window);
-		textArea.setBounds(210, 48, 162, 163);
-		textArea.setLineWrap(true);
-		BigPanel1.add(textArea);
+		patientInfoDisplayPage1 = new JTextArea();
+		patientInfoDisplayPage1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		patientInfoDisplayPage1.setText("Choose the patient");
+		patientInfoDisplayPage1.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		patientInfoDisplayPage1.setBackground(SystemColor.window);
+		patientInfoDisplayPage1.setBounds(210, 48, 162, 163);
+		patientInfoDisplayPage1.setLineWrap(true);
+		page1.add(patientInfoDisplayPage1);
 		
 		/*- chosen list displays the detailed in next coloumn-*/
-		list2.addListSelectionListener(new ListSelectionListener() {	
+		patientList.addListSelectionListener(new ListSelectionListener() {	
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				Patient p = list2.getSelectedValue();
+				Patient p = patientList.getSelectedValue();
 				if (!arg0.getValueIsAdjusting()) {
-					textArea.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
+					patientInfoDisplayPage1.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
 									"DOB: " + p.getBirthdate() + System.lineSeparator()
 									+ "Gender: " + p.getGender() + System.lineSeparator()
 									+ "Social Insurance: " + p.getSocialInsuranceNumber());
-					b1.setEnabled(true);
-					b2.setEnabled(true);
-					
-					//textArea.setText(list2.getSelectedValue().toString());
+					showGraphButton.setEnabled(true);
+					addLabReportButton.setEnabled(true);
+			
 				}
 			}
 		});
 		
 		/*--CheckBox: Lab Parameter view selection --*/
-		JPanel CheckBoxPanel = new JPanel();
-		CheckBoxPanel.setBackground(Color.WHITE);
-		CheckBoxPanel.setBounds(16, 270, 623, 500);
+		JPanel checkBoxPanel = new JPanel();
+		checkBoxPanel.setBackground(Color.WHITE);
+		checkBoxPanel.setBounds(16, 270, 623, 500);
 
-		JScrollPane pane = new JScrollPane(CheckBoxPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		pane.setBounds(16, 270, 623, 361);
-		//pane.setAutoscrolls(true);
-		//pane.setBounds(100, 100, 720, 700);
-		//pane.getViewport().setView(BigPanel1);
-		//pane.setVisible(true);
-		BigPanel1.add(pane);
-		CheckBoxPanel.setLayout(new GridLayout(0, 2, 0, 0));
+		JScrollPane checkBoxPanelScroll = new JScrollPane(checkBoxPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		checkBoxPanelScroll.setBounds(16, 270, 623, 361);
+		page1.add(checkBoxPanelScroll);
+		checkBoxPanel.setLayout(new GridLayout(0, 2, 0, 0));
 		List<JCheckBox> CheckBoxList = new ArrayList<JCheckBox>();
 		
 		// read CodedLabparameters from catalogue file
 		//tests = CDALabreportParser.extractCodedLabparameters("/home/ingo/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
-		tests = CDALabreportParser.extractCodedLabparameters("/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
+		parameterList = CDALabreportParser.extractCodedLabparameters("/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
 		//tests = CDALabreportParser.extractCodedLabparameters("U:\\git\\ACH-CDA\\src\\main\\resources\\cda\\labreport0.cda");
-		System.out.println("The GUI extracted " + tests.size() + " CodedLabparameters from catalogue file.");
+		System.out.println("The GUI extracted " + parameterList.size() + " CodedLabparameters from catalogue file.");
 		
-		for(CodedLabparameter test : tests)
+		for(CodedLabparameter test : parameterList)
 		{	
 			JCheckBox myCheckBox = new JCheckBox(test.getDisplayName());
-			CheckBoxPanel.add(myCheckBox);
+			checkBoxPanel.add(myCheckBox);
 			CheckBoxList.add(myCheckBox);
 			checkBoxMap.put(myCheckBox,test);
 		}
@@ -249,11 +235,11 @@ public class GUI extends JFrame {
 					 if (myCheckBox.isSelected())
 							 {
 						 System.out.println("This checkbox was selected: " + myCheckBox.getText());
-						 SelectedList.add( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
+						 selectedList.add( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
 							 }
 					 else {
 						 System.out.println("This checkbox was deselected: " + myCheckBox.getText());
-						 SelectedList.remove( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
+						 selectedList.remove( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
 					 }
 
 				}
@@ -263,153 +249,152 @@ public class GUI extends JFrame {
 		}
 			
 		
-		/*-- Panels --*/
+		/*-- Contienued: Page 1 Layout  --*/
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(102, 204, 255));
-		panel_1.setBounds(6, 6, 651, 34);
-		BigPanel1.add(panel_1);
-		panel_1.setLayout(null);
+		JPanel page1TitleBox1 = new JPanel();
+		page1TitleBox1.setBackground(new Color(102, 204, 255));
+		page1TitleBox1.setBounds(6, 6, 651, 34);
+		page1.add(page1TitleBox1);
+		page1TitleBox1.setLayout(null);
 		
-		JLabel PatientInfo = new JLabel("Patient Info");
-		PatientInfo.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		PatientInfo.setBounds(204, 9, 160, 22);
-		panel_1.add(PatientInfo);
-		PatientInfo.setForeground(Color.WHITE);
-		JLabel PatientList = new JLabel("Patient");
-		PatientList.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		PatientList.setBounds(6, 6, 130, 28);
-		panel_1.add(PatientList);
-		PatientList.setForeground(Color.WHITE);
+		JLabel patientInfoLabel = new JLabel("Patient Info");
+		patientInfoLabel.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		patientInfoLabel.setBounds(204, 9, 160, 22);
+		page1TitleBox1.add(patientInfoLabel);
+		patientInfoLabel.setForeground(Color.WHITE);
+		JLabel patientListLabel = new JLabel("Patient");
+		patientListLabel.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		patientListLabel.setBounds(6, 6, 130, 28);
+		page1TitleBox1.add(patientListLabel);
+		patientListLabel.setForeground(Color.WHITE);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setLayout(null);
-		panel_2.setBackground(new Color(102, 204, 255));
-		panel_2.setBounds(6, 224, 651, 34);
-		BigPanel1.add(panel_2);
+		JPanel page1TitleBox2 = new JPanel();
+		page1TitleBox2.setLayout(null);
+		page1TitleBox2.setBackground(new Color(102, 204, 255));
+		page1TitleBox2.setBounds(6, 224, 651, 34);
+		page1.add(page1TitleBox2);
 		
-		JLabel LabParameter = new JLabel("Lab Parameters");
-		LabParameter.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		LabParameter.setBounds(6, 10, 200, 22);
-		panel_2.add(LabParameter);
-		LabParameter.setForeground(Color.WHITE);
-
+		JLabel labParameterLabel = new JLabel("Lab Parameters");
+		labParameterLabel.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		labParameterLabel.setBounds(6, 10, 200, 22);
+		page1TitleBox2.add(labParameterLabel);
+		labParameterLabel.setForeground(Color.WHITE);
 	    
 		
 		
-		/*-- Page 3 --*/
+		/*-- Page 3 Layout --*/
 		
-		BigPanel3 = new JPanel();
-		BigPanel3.setBackground(Color.WHITE);
-		layeredPane.add(BigPanel3, "name_100020660159536");
-		BigPanel3.setLayout(null);
+		page3 = new JPanel();
+		page3.setBackground(Color.WHITE);
+		layeredPane.add(page3, "name_100020660159536");
+		page3.setLayout(null);
 	
 		
-		JTextArea textArea_3 = new JTextArea();
-		list2.addListSelectionListener(new ListSelectionListener() {
+		JTextArea patientInfoDisplayPage3 = new JTextArea();
+		patientList.addListSelectionListener(new ListSelectionListener() {
 		    @Override
 		    public void valueChanged(ListSelectionEvent e) {
-		    	Patient p = list2.getSelectedValue();
-		    	textArea_3.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
+		    	Patient p = patientList.getSelectedValue();
+		    	patientInfoDisplayPage3.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
 						"DOB: " + p.getBirthdate() + System.lineSeparator()
 						+ "Gender: " + p.getGender() + System.lineSeparator()
 						+ "Social Insurance: " + p.getSocialInsuranceNumber());
 		    }
 		});
-		textArea_3.setLineWrap(true);
-		textArea_3.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		textArea_3.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		textArea_3.setBackground(SystemColor.window);
+		patientInfoDisplayPage3.setLineWrap(true);
+		patientInfoDisplayPage3.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		patientInfoDisplayPage3.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		patientInfoDisplayPage3.setBackground(SystemColor.window);
 		//pane3.setBounds(10, 46, 162, 163);
 		
-		JScrollPane pane3 = new JScrollPane(textArea_3);
-		pane3.setBounds(10, 46, 453, 53);
+		JScrollPane patientInfoScroll2 = new JScrollPane(patientInfoDisplayPage3);
+		patientInfoScroll2.setBounds(10, 46, 453, 53);
 		
-		BigPanel3.add(pane3);
+		page3.add(patientInfoScroll2);
 		
 		
-		JPanel panel_4 = new JPanel();
-		panel_4.setLayout(null);
-		panel_4.setBackground(new Color(102, 204, 255));
-		panel_4.setBounds(0, 0, 651, 34);
-		BigPanel3.add(panel_4);
+		JPanel page3TitleBox1 = new JPanel();
+		page3TitleBox1.setLayout(null);
+		page3TitleBox1.setBackground(new Color(102, 204, 255));
+		page3TitleBox1.setBounds(0, 0, 651, 34);
+		page3.add(page3TitleBox1);
 		
-		JLabel label_2 = new JLabel("Patient Info");
-		label_2.setForeground(Color.WHITE);
-		label_2.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		label_2.setBounds(6, 12, 160, 22);
-		panel_4.add(label_2);
+		JLabel page3Label1 = new JLabel("Patient Info");
+		page3Label1.setForeground(Color.WHITE);
+		page3Label1.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		page3Label1.setBounds(6, 12, 160, 22);
+		page3TitleBox1.add(page3Label1);
 		
-		JPanel panel_5 = new JPanel();
-		panel_5.setLayout(null);
-		panel_5.setBackground(new Color(102, 204, 255));
-		panel_5.setBounds(0, 111, 651, 34);
-		BigPanel3.add(panel_5);
+		JPanel page3TitleBox2 = new JPanel();
+		page3TitleBox2.setLayout(null);
+		page3TitleBox2.setBackground(new Color(102, 204, 255));
+		page3TitleBox2.setBounds(0, 111, 651, 34);
+		page3.add(page3TitleBox2);
 		
-		JLabel label_3 = new JLabel("Lab Parameter");
-		label_3.setForeground(Color.WHITE);
-		label_3.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		label_3.setBounds(6, 6, 164, 22);
-		panel_5.add(label_3);
+		JLabel page3Label2 = new JLabel("Lab Parameter");
+		page3Label2.setForeground(Color.WHITE);
+		page3Label2.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		page3Label2.setBounds(6, 6, 164, 22);
+		page3TitleBox2.add(page3Label2);
 		
-		JPanel panel_6 = new JPanel();
-		panel_6.setLayout(null);
-		panel_6.setBackground(new Color(102, 204, 255));
-		panel_6.setBounds(0, 598, 651, 40);
-		BigPanel3.add(panel_6);
+		JPanel page3ButtonBox = new JPanel();
+		page3ButtonBox.setLayout(null);
+		page3ButtonBox.setBackground(new Color(102, 204, 255));
+		page3ButtonBox.setBounds(0, 598, 651, 40);
+		page3.add(page3ButtonBox);
 		
 		JButton btnNewSave = new JButton("Save");
 		btnNewSave.setBounds(519, 0, 126, 40);
-		panel_6.add(btnNewSave);
+		page3ButtonBox.add(btnNewSave);
 		btnNewSave.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		
 		JButton btnNewBack = new JButton("Cancel");
 		btnNewBack.setBounds(6, 0, 126, 40);
-		panel_6.add(btnNewBack);
+		page3ButtonBox.add(btnNewBack);
 		btnNewBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(BigPanel1);	
+				switchPanels(page1);	
 			}		
 		});
 		btnNewBack.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		
 		//table setup
-		JTable table = new JTable();
+		JTable page3Table = new JTable();
 				
 		//a table model creation 
-		String[] columns = {"ID", "Value", "unit"};
+		String[] tableColumns = {"ID", "Value", "unit"};
 		DefaultTableModel Tmodel = new DefaultTableModel();
-		Tmodel.setColumnIdentifiers(columns);
+		Tmodel.setColumnIdentifiers(tableColumns);
 				
 		//set the model to the table
-		table.setModel(Tmodel);
+		page3Table.setModel(Tmodel);
 				
 		//table visual setup
-		table.setBackground(Color.LIGHT_GRAY);
-		table.setForeground(Color.BLACK);
+		page3Table.setBackground(Color.LIGHT_GRAY);
+		page3Table.setForeground(Color.BLACK);
 		Font font = new Font("", 1,22);
-		table.setFont(font);
-		table.setRowHeight(30);
+		page3Table.setFont(font);
+		page3Table.setRowHeight(30);
 				
 		//create JScrollPane
-		JScrollPane Spane = new JScrollPane(table);
-		Spane.setBounds(10, 216, 400, 300);
-		BigPanel3.add(Spane);
+		JScrollPane tableScroll = new JScrollPane(page3Table);
+		tableScroll.setBounds(10, 216, 400, 300);
+		page3.add(tableScroll);
 
 		
-		JLabel lblNewLabel = new JLabel("Parameter");
-		lblNewLabel.setBounds(436, 228, 128, 16);
-		BigPanel3.add(lblNewLabel);
+		JLabel labelParameter = new JLabel("Parameter");
+		labelParameter.setBounds(436, 228, 128, 16);
+		page3.add(labelParameter);
 		
-		JComboBox<String> comboBox = new JComboBox();
-		comboBox.setBounds(433, 256, 200, 27);
-		BigPanel3.add(comboBox);
+		JComboBox<String> paraSelection = new JComboBox();
+		paraSelection.setBounds(433, 256, 200, 27);
+		page3.add(paraSelection);
 		
 
-		for(CodedLabparameter test : tests)
+		for(CodedLabparameter test : parameterList)
 		{	
-			comboBox.addItem(test.getDisplayName());
-			comboBoxMap.put(comboBox,test);
+			paraSelection.addItem(test.getDisplayName());
+			comboBoxMap.put(paraSelection,test);
 		
 		}
 
@@ -417,20 +402,20 @@ public class GUI extends JFrame {
 		
 		JLabel lblValue = new JLabel("Value");
 		lblValue.setBounds(436, 295, 61, 16);
-		BigPanel3.add(lblValue);
+		page3.add(lblValue);
 		
-		textField = new JTextField();
-		textField.setBounds(434, 324, 130, 26);
-		BigPanel3.add(textField);
-		textField.setColumns(10);
+		labValueField = new JTextField();
+		labValueField.setBounds(434, 324, 130, 26);
+		page3.add(labValueField);
+		labValueField.setColumns(10);
 		
 		JLabel lblUnit = new JLabel("Unit");
 		lblUnit.setBounds(436, 362, 61, 16);
-		BigPanel3.add(lblUnit);
+		page3.add(lblUnit);
 		
-		JComboBox<String> comboBox_1 = new JComboBox<String>();
-		comboBox_1.setBounds(436, 390, 118, 27);
-		BigPanel3.add(comboBox_1);
+		JComboBox<String> valueUnitSelection = new JComboBox<String>();
+		valueUnitSelection.setBounds(436, 390, 118, 27);
+		page3.add(valueUnitSelection);
 		
 		//TODO: once you set value unit in 'CDALabreportParser', can you please enable this
 		
@@ -440,9 +425,9 @@ public class GUI extends JFrame {
 			comboBoxMap.put(comboBox_1, test);
 		}*/
 		
-		comboBox_1.addItem("G/l");
-		comboBox_1.addItem("T/l");
-		comboBox_1.addItem("g/dl");
+		valueUnitSelection.addItem("G/l");
+		valueUnitSelection.addItem("T/l");
+		valueUnitSelection.addItem("g/dl");
 		
 
 		
@@ -453,11 +438,9 @@ public class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{	String[] row = new String[3];
-				row[0]=comboBox.getSelectedItem().toString();
-				row[1]=textField.getText();
-				row[2]=comboBox_1.getSelectedItem().toString();
-				
-				ArrayList<List> yolo = new ArrayList<List>();
+				row[0]=paraSelection.getSelectedItem().toString();
+				row[1]=labValueField.getText();
+				row[2]=valueUnitSelection.getSelectedItem().toString();
 				
 				
 				//add row to the model
@@ -465,179 +448,107 @@ public class GUI extends JFrame {
 			}
 		});
 		
-		table.getModel().addTableModelListener(new TableModelListener(){
-			
-			public void tableChanged(TableModelEvent e) {
-				
-				for (int i = 0; i<table.getRowCount(); i++){
-					for (int j = 0; j<table.getColumnCount(); j++){
-						ArrayList testing = new ArrayList();
-						testing.add((String)table.getModel().getValueAt(i, j));
-						System.out.println(testing);
-					}}}});
 
 		
-		BigPanel3.add(btnAdd);	
+		page3.add(btnAdd);	
 
 	}
 	
+	
+	///----------page 2--------////
 
 	
 	private JPanel page2 (Map<String,List<Labreport>> mappedLabreports)
 	{
-		BigPanel2 = new JPanel();
+		page2 = new JPanel();
+	
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setLayout(null);
-		panel_2.setBackground(new Color(102, 204, 255));
-		panel_2.setBounds(6, 224, 651, 34);
 		
-
-		JLabel LabParameter = new JLabel("Lab Parameters");
-		LabParameter.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		LabParameter.setBounds(6, 6, 200, 22);
-		panel_2.add(LabParameter);
-		LabParameter.setForeground(Color.WHITE);
-		BigPanel2.setBackground(new Color(255, 255, 255));
-		layeredPane.add(BigPanel2, "name_99374934333812");
-		BigPanel2.setLayout(null);
+		page2.setBackground(new Color(255, 255, 255));
+		layeredPane.add(page2, "name_99374934333812");
+		page2.setLayout(null);
 	
 	
-		JTextArea textArea_2 = new JTextArea();
-		/*list2.addListSelectionListener(new ListSelectionListener() {
-		    @Override
-		    public void valueChanged(ListSelectionEvent e) {
-		    	Patient p = list2.getSelectedValue();
-		    	textArea_2.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
-						"DOB: " + p.getBirthdate() + System.lineSeparator()
-						+ "Gender: " + p.getGender() + System.lineSeparator()
-						+ "Social Insurance: " + p.getSocialInsuranceNumber());
-		    }
-		});*/
-		Patient p = list2.getSelectedValue();
-    	textArea_2.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
+		JTextArea page2PatientInfo = new JTextArea();
+		Patient p = patientList.getSelectedValue();
+    	page2PatientInfo.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
 				"DOB: " + p.getBirthdate() + System.lineSeparator()
 				+ "Gender: " + p.getGender() + System.lineSeparator()
 				+ "Social Insurance: " + p.getSocialInsuranceNumber());
 		
 
-		textArea_2.setLineWrap(true);
-		textArea_2.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		textArea_2.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		textArea_2.setBackground(SystemColor.window);
+		page2PatientInfo.setLineWrap(true);
+		page2PatientInfo.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		page2PatientInfo.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		page2PatientInfo.setBackground(SystemColor.window);
 		
-		JScrollPane pane2 = new JScrollPane(textArea_2);
-		pane2.setBounds(10, 46, 453, 53);
-		BigPanel2.add(pane2);
+		JScrollPane page2PatientScroll = new JScrollPane(page2PatientInfo);
+		page2PatientScroll.setBounds(10, 46, 453, 53);
+		page2.add(page2PatientScroll);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setLayout(null);
-		panel_3.setBackground(new Color(102, 204, 255));
-		panel_3.setBounds(0, 0, 651, 34);
-		BigPanel2.add(panel_3);
+		JPanel page2TitleBox1 = new JPanel();
+		page2TitleBox1.setLayout(null);
+		page2TitleBox1.setBackground(new Color(102, 204, 255));
+		page2TitleBox1.setBounds(0, 0, 651, 34);
+		page2.add(page2TitleBox1);
 		
-		JLabel label_1 = new JLabel("Patient Info");
-		label_1.setForeground(Color.WHITE);
-		label_1.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		label_1.setBounds(6, 12, 160, 22);
-		panel_3.add(label_1);
+		JLabel page2Title1 = new JLabel("Patient Info");
+		page2Title1.setForeground(Color.WHITE);
+		page2Title1.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		page2Title1.setBounds(6, 12, 160, 22);
+		page2TitleBox1.add(page2Title1);
 		
 		
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.setBackground(new Color(102, 204, 255));
-		panel.setBounds(0, 111, 651, 34);
-		BigPanel2.add(panel);
+		JPanel page2TitleBox2 = new JPanel();
+		page2TitleBox2.setLayout(null);
+		page2TitleBox2.setBackground(new Color(102, 204, 255));
+		page2TitleBox2.setBounds(0, 111, 651, 34);
+		page2.add(page2TitleBox2);
 		
 		JLabel lblReportOverview = new JLabel("Report Overview");
 		lblReportOverview.setForeground(Color.WHITE);
 		lblReportOverview.setFont(new Font("Myriad Pro", Font.BOLD, 20));
 		lblReportOverview.setBounds(6, 12, 250, 22);
-		panel.add(lblReportOverview);
+		page2TitleBox2.add(lblReportOverview);
 		
-		JButton button3 = new JButton("Back");
-		button3.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		button3.setBounds(504, 46, 126, 40);
-		button3.addActionListener(new ActionListener() {
+		JButton page2BackButton = new JButton("Back");
+		page2BackButton.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		page2BackButton.setBounds(504, 46, 126, 40);
+		page2BackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(BigPanel1);	
+				switchPanels(page1);	
 			}		
 		});
-		BigPanel2.add(button3);
+		page2.add(page2BackButton);
 		
 		/*------Graphs-----*/
 		
 		
-		JPanel panel_7 = new JPanel();
+		JPanel graphContainer = new JPanel();
 	
-		panel_7.setLayout(new GridLayout(0, 2, 0, 0));
-		JScrollPane scroll2 = new JScrollPane(panel_7);
-		scroll2.setBounds(10, 148, 628, 400);
-		BigPanel2.add(scroll2);
+		graphContainer.setLayout(new GridLayout(0, 2, 0, 0));
+		JScrollPane graphScroll = new JScrollPane(graphContainer);
+		graphScroll.setBounds(10, 148, 628, 400);
+		page2.add(graphScroll);
 		
-		
-		/*JPanel panel_8 = new JPanel();
-		panel_8.setBounds(10, 432, 628, 282);
-		BigPanel2.add(panel_8);
-		panel_8.setLayout(new BoxLayout(panel_8, BoxLayout.X_AXIS));*/
-		
-		// Plot the selected parameters
-		
-		/*panel_7.add( getPlotFromLabreports(new ArrayList<Labreport>(), "Erythrozyten") );
-		panel_7.add( getPlotFromLabreports(new ArrayList<Labreport>(), "abcde") );
-		panel_8.add( getPlotFromLabreports(new ArrayList<Labreport>(), "Erythrozyten") );
-		panel_8.add( getPlotFromLabreports(new ArrayList<Labreport>(), "abcde") );*/
 		
 		// find out which Patient was selected
 		
-		Patient selectedPatient = list2.getSelectedValue();
-		// System.out.println("The selected Patient is: " + selectedPatient.getFamilyName());
-		
-		// SelectedList contains all the selected lab parameters.
-		// Unfortunately, atm, only 4 parameters can be plotted, see:
-		// Improvised for now: Shorten SelectedList to a maximum of 4 ListItems.
+		Patient selectedPatient = patientList.getSelectedValue();
+	
 		
 		List<CodedLabparameter> parametersToPlot = new ArrayList<CodedLabparameter>();
-		
-		/*//for(int i=0; i<4; i++)
-		for (int i=0; i < SelectedList.size(); i++)
-		{
-			if (i<SelectedList.size())
-			{
-				parametersToPlot.add( SelectedList.get(i) );
-			}
-		}
-		
-		// as for now (see TODO above), hardcoded number of plots is four*/
+	
 		
 		List<Labreport> thePatientsLabreports = mappedLabreports.get( selectedPatient.getSocialInsuranceNumber() );
+	
 		
-		/*for (int i=0; i < parametersToPlot.size(); i++)
+		for (CodedLabparameter parameter : selectedList)
 		{
-			if ( !parametersToPlot.isEmpty())	
-			{
-				panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0))); 
-				
-			}
-		}*/
-		
-		for (CodedLabparameter parameter : SelectedList)
-		{
-			panel_7.add( getPlotFromLabreports(thePatientsLabreports,parameter) );
+			graphContainer.add( getPlotFromLabreports(thePatientsLabreports,parameter) );
 		}
 		
-		return BigPanel2;
-		
-		/*if ( !parametersToPlot.isEmpty() )
-			panel_7.add( getPlotFromLabreports(thePatientsLabreports,parametersToPlot.remove(0)) );
-		if ( !parametersToPlot.isEmpty() )
-			panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );
-		if ( !parametersToPlot.isEmpty() )
-			panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );
-		if ( !parametersToPlot.isEmpty() )
-			panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );*
-		return BigPanel2;*/
-		
+		return page2;
 		
 	}
 	
@@ -720,3 +631,4 @@ public class GUI extends JFrame {
 
 	
 }
+
