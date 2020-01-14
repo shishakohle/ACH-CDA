@@ -229,8 +229,8 @@ public class GUI extends JFrame {
 		List<JCheckBox> CheckBoxList = new ArrayList<JCheckBox>();
 		
 		// read CodedLabparameters from catalogue file
-		tests = CDALabreportParser.extractCodedLabparameters("/home/ingo/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
-		//tests = CDALabreportParser.extractCodedLabparameters("/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
+		//tests = CDALabreportParser.extractCodedLabparameters("/home/ingo/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
+		tests = CDALabreportParser.extractCodedLabparameters("/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
 		//tests = CDALabreportParser.extractCodedLabparameters("U:\\git\\ACH-CDA\\src\\main\\resources\\cda\\labreport0.cda");
 		System.out.println("The GUI extracted " + tests.size() + " CodedLabparameters from catalogue file.");
 		
@@ -288,6 +288,11 @@ public class GUI extends JFrame {
 		panel_2.setBounds(6, 224, 651, 34);
 		BigPanel1.add(panel_2);
 		
+		JLabel LabParameter = new JLabel("Lab Parameters");
+		LabParameter.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		LabParameter.setBounds(6, 10, 200, 22);
+		panel_2.add(LabParameter);
+		LabParameter.setForeground(Color.WHITE);
 
 	    
 		
@@ -452,6 +457,9 @@ public class GUI extends JFrame {
 				row[1]=textField.getText();
 				row[2]=comboBox_1.getSelectedItem().toString();
 				
+				ArrayList<List> yolo = new ArrayList<List>();
+				
+				
 				//add row to the model
 				Tmodel.addRow(row);
 			}
@@ -484,6 +492,7 @@ public class GUI extends JFrame {
 		panel_2.setBackground(new Color(102, 204, 255));
 		panel_2.setBounds(6, 224, 651, 34);
 		
+
 		JLabel LabParameter = new JLabel("Lab Parameters");
 		LabParameter.setFont(new Font("Myriad Pro", Font.BOLD, 20));
 		LabParameter.setBounds(6, 6, 200, 22);
