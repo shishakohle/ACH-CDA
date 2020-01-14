@@ -7,6 +7,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +44,7 @@ public class GUI extends JFrame {
 	private String tests[]= {"Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH"};
 	private JPanel panel_7;
 	private ChartPanel chartPanel;
+	private List<JCheckBox> SelectedList;
 
 	/**
 	 * Launch the application.
@@ -205,11 +209,37 @@ public class GUI extends JFrame {
 		//pane.setVisible(true);
 		BigPanel1.add(pane);
 		CheckBoxPanel.setLayout(new GridLayout(0, 2, 0, 0));
-		
+		List<JCheckBox> CheckBoxList = new ArrayList<JCheckBox>();
+		List<JCheckBox> SelectedList = new ArrayList<JCheckBox>();
 		for(String test : tests)
+		{	
+			JCheckBox myCheckBox = new JCheckBox(test);
+			CheckBoxPanel.add(myCheckBox);
+			CheckBoxList.add(myCheckBox);
+			};
+			
+		for(JCheckBox myCheckBox : CheckBoxList)
 		{
-			CheckBoxPanel.add(new JCheckBox(test));
+			myCheckBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					 if (myCheckBox.isSelected())
+							 {
+						 System.out.println("This checkbox is selected: " + myCheckBox.getText());
+						 SelectedList.add(myCheckBox);
+						 System.out.println(SelectedList);
+							 }
+					 else {
+						 System.out.println("This checkbox is diselected: " + myCheckBox.getText());
+						 SelectedList.remove(myCheckBox);
+						 System.out.println(SelectedList);
+					 }
+
+				}
+			});  
+			
+	
 		}
+			
 		
 		/*-- Panels --*/
 		
@@ -490,6 +520,9 @@ public class GUI extends JFrame {
 
 	}
 	
+
+	
+
 	public void printSelectedNames(JCheckBox[] boxes) {
 
 	    for(JCheckBox box : boxes)
