@@ -3,6 +3,7 @@ package at.ach.CDA;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -359,6 +360,28 @@ public class CDALabreportParser
 		}
 		
 		return resultList;
+	}
+	
+	public static List<CodedLabparameter> extractCodedLabparameters(String catalogueFilepath)
+	{
+		List<CodedLabparameter> labparameters = new ArrayList<CodedLabparameter>();
+		
+		List<Observation> observations = extractObservations(catalogueFilepath);
+		
+		for(Observation observation : observations)
+		{
+			// TODO check for null here before using setters of CodedLabparameter!
+			CodedLabparameter labparameter = new CodedLabparameter();
+			labparameter.setCodeSystem( observation.getCodeSystem() );
+			labparameter.setCodeSystemName( observation.getCodeSystemName() );
+			labparameter.setParameterCode( observation.getCodeCode() );
+			labparameter.setDisplayName( observation.getDisplayName() );
+			//labparameter.setValueUnit(  );
+			
+			labparameters.add(labparameter);
+		}
+		
+		return labparameters;
 	}
 	
 	public static Labreport extractLabreport(String cdaFilepath)

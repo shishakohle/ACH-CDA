@@ -10,7 +10,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +29,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -39,13 +46,15 @@ public class GUI extends JFrame {
 	private JTextArea textArea;
 	private JTextArea textArea2;
 	private JTextArea textArea3;
-	private JList list2;
+	private JList<Patient> list2 = new JList<Patient>();
 	private JTable table;
 	private JTextField textField;
-	private String tests[]= {"Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH"};
+	//private String tests[]= {"Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH", "Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH", "Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH", "Leukozyten","Thrombozyten", "Erythrozyten", "Hämoglobin", "Hämatokrit", "MCH"};
+	private List<CodedLabparameter> tests = new ArrayList<CodedLabparameter>();
 	private JPanel panel_7;
 	private ChartPanel chartPanel;
-	private List<JCheckBox> SelectedList = new ArrayList<JCheckBox>();
+	private List<CodedLabparameter> SelectedList = new ArrayList<CodedLabparameter>();
+	private Map<JCheckBox,CodedLabparameter> checkBoxMap = new HashMap<JCheckBox, CodedLabparameter>();
 
 	/**
 	 * Launch the application.
@@ -71,10 +80,15 @@ public class GUI extends JFrame {
 		layeredPane.repaint();
 		layeredPane.revalidate();
 		
-		System.out.println("GUI switched to another page. These checkboxes were checked recently:");
-		for (JCheckBox checkbox : SelectedList)
+		System.out.println("GUI switched to another page. " + (
+				SelectedList.isEmpty() ?
+				"No checkboxes were checked recently." :
+				"These checkboxes were checked recently:" )
+				);
+		
+		for (CodedLabparameter checkbox : SelectedList)
 		{
-			System.out.println("\t"+checkbox.getText());
+			System.out.println("\t" + checkbox.getCodeSystemName() + " : " + checkbox.getDisplayName());
 		}
 	}
 	
@@ -92,9 +106,10 @@ public class GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public GUI(Map<String,Patient> mappedPatients, Map<String,List<Labreport>> mappedLabreports) {
+		// start GUI config
 		setTitle("Ingo & Dahn Healthcare co");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 667, 670); //(100, 100, 667, 459)
+		setBounds(100, 100, 667, 740);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -131,7 +146,8 @@ public class GUI extends JFrame {
 		b1.setEnabled(false);
 		b1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(BigPanel2);	
+				//switchPanels(BigPanel2);
+				switchPanels(page2(mappedLabreports));
 			}		
 		});
 		b1.setBounds(445, 70, 126, 40);
@@ -154,7 +170,6 @@ public class GUI extends JFrame {
 		BigPanel1.add(b2);
 		b2.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		
-		JList<Patient> list2 = new JList<>();
 		DefaultListModel<Patient> model = new DefaultListModel<>();
 		list2.setModel(model);
 		for (Patient patient : mappedPatients.values())
@@ -217,13 +232,18 @@ public class GUI extends JFrame {
 		BigPanel1.add(pane);
 		CheckBoxPanel.setLayout(new GridLayout(0, 2, 0, 0));
 		List<JCheckBox> CheckBoxList = new ArrayList<JCheckBox>();
-		//List<JCheckBox> SelectedList = new ArrayList<JCheckBox>();
-		for(String test : tests)
+		
+		// read CodedLabparameters from catalogue file
+		tests = CDALabreportParser.extractCodedLabparameters("/home/ingo/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
+		System.out.println("The GUI extracted " + tests.size() + " CodedLabparameters from catalogue file.");
+		
+		for(CodedLabparameter test : tests)
 		{	
-			JCheckBox myCheckBox = new JCheckBox(test);
+			JCheckBox myCheckBox = new JCheckBox(test.getDisplayName());
 			CheckBoxPanel.add(myCheckBox);
 			CheckBoxList.add(myCheckBox);
-			};
+			checkBoxMap.put(myCheckBox,test);
+		}
 			
 		for(JCheckBox myCheckBox : CheckBoxList)
 		{
@@ -231,12 +251,12 @@ public class GUI extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					 if (myCheckBox.isSelected())
 							 {
-						 System.out.println("This checkbox is selected: " + myCheckBox.getText());
-						 SelectedList.add(myCheckBox);
+						 System.out.println("This checkbox was selected: " + myCheckBox.getText());
+						 SelectedList.add( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
 							 }
 					 else {
-						 System.out.println("This checkbox is diselected: " + myCheckBox.getText());
-						 SelectedList.remove(myCheckBox);
+						 System.out.println("This checkbox was deselected: " + myCheckBox.getText());
+						 SelectedList.remove( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
 					 }
 
 				}
@@ -271,103 +291,7 @@ public class GUI extends JFrame {
 		panel_2.setBounds(6, 224, 651, 34);
 		BigPanel1.add(panel_2);
 		
-		JLabel LabParameter = new JLabel("Lab Parameters");
-		LabParameter.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		LabParameter.setBounds(6, 6, 200, 22);
-		panel_2.add(LabParameter);
-		LabParameter.setForeground(Color.WHITE);
-		BigPanel2 = new JPanel();
-		BigPanel2.setBackground(new Color(255, 255, 255));
-		layeredPane.add(BigPanel2, "name_99374934333812");
-		BigPanel2.setLayout(null);
-	
-	
-		JTextArea textArea_2 = new JTextArea();
-		list2.addListSelectionListener(new ListSelectionListener() {
-		    @Override
-		    public void valueChanged(ListSelectionEvent e) {
-		    	Patient p = list2.getSelectedValue();
-		    	textArea_2.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
-						"DOB: " + p.getBirthdate() + System.lineSeparator()
-						+ "Gender: " + p.getGender() + System.lineSeparator()
-						+ "Social Insurance: " + p.getSocialInsuranceNumber());
-		    }
-		});
-		
 
-		textArea_2.setLineWrap(true);
-		textArea_2.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		textArea_2.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		textArea_2.setBackground(SystemColor.window);
-		
-		JScrollPane pane2 = new JScrollPane(textArea_2);
-		pane2.setBounds(10, 46, 453, 53);
-		BigPanel2.add(pane2);
-		
-		JPanel panel_3 = new JPanel();
-		panel_3.setLayout(null);
-		panel_3.setBackground(new Color(102, 204, 255));
-		panel_3.setBounds(0, 0, 651, 34);
-		BigPanel2.add(panel_3);
-		
-		JLabel label_1 = new JLabel("Patient Info");
-		label_1.setForeground(Color.WHITE);
-		label_1.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		label_1.setBounds(6, 12, 160, 22);
-		panel_3.add(label_1);
-		
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.setBackground(new Color(102, 204, 255));
-		panel.setBounds(0, 111, 651, 34);
-		BigPanel2.add(panel);
-		
-		JLabel lblReportOverview = new JLabel("Report Overview");
-		lblReportOverview.setForeground(Color.WHITE);
-		lblReportOverview.setFont(new Font("Myriad Pro", Font.BOLD, 20));
-		lblReportOverview.setBounds(6, 12, 160, 22);
-		panel.add(lblReportOverview);
-		
-		JButton button3 = new JButton("Back");
-		button3.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		button3.setBounds(504, 46, 126, 40);
-		button3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				switchPanels(BigPanel1);	
-			}		
-		});
-		BigPanel2.add(button3);
-		
-		JPanel panel_7 = new JPanel();
-		panel_7.setBounds(10, 157, 628, 282);
-		BigPanel2.add(panel_7);
-		panel_7.setLayout(new BoxLayout(panel_7, BoxLayout.X_AXIS));
-		
-		/***
-		 * GRAPH
-		 * **/
-		
-		final XYSeries series = new XYSeries("My Chocolate value");
-		Observation ob = new Observation("","","","","2020","","120");
-		
-	    series.add(Integer.parseInt(ob.getEffectiveTimeValue()), Integer.parseInt(ob.getValueValue()));
-	    series.add(19951313, 200);
-	    series.add(20201113, 100.0);
-	  
-	    final XYSeriesCollection data = new XYSeriesCollection(series);
-	    final JFreeChart chart = ChartFactory.createXYLineChart(
-	        "My Chocolate value",
-	        "Date", 
-	        "Value", 
-	        data,
-	        PlotOrientation.VERTICAL,
-	        true,
-	        true,
-	        false);
-	    final ChartPanel chartPanel = new ChartPanel(chart);
-	    chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-	    panel_7.add(chartPanel);
 	    
 		
 		
@@ -495,7 +419,7 @@ public class GUI extends JFrame {
 		lblUnit.setBounds(436, 362, 61, 16);
 		BigPanel3.add(lblUnit);
 		
-		JComboBox<String> comboBox_1 = new JComboBox();
+		JComboBox<String> comboBox_1 = new JComboBox<String>();
 		comboBox_1.setBounds(436, 390, 118, 27);
 		BigPanel3.add(comboBox_1);
 		
@@ -527,6 +451,215 @@ public class GUI extends JFrame {
 	
 
 	
+	private JPanel page2 (Map<String,List<Labreport>> mappedLabreports)
+	{
+		BigPanel2 = new JPanel();
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setBackground(new Color(102, 204, 255));
+		panel_2.setBounds(6, 224, 651, 34);
+		
+		JLabel LabParameter = new JLabel("Lab Parameters");
+		LabParameter.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		LabParameter.setBounds(6, 6, 200, 22);
+		panel_2.add(LabParameter);
+		LabParameter.setForeground(Color.WHITE);
+		BigPanel2.setBackground(new Color(255, 255, 255));
+		layeredPane.add(BigPanel2, "name_99374934333812");
+		BigPanel2.setLayout(null);
+	
+	
+		JTextArea textArea_2 = new JTextArea();
+		/*list2.addListSelectionListener(new ListSelectionListener() {
+		    @Override
+		    public void valueChanged(ListSelectionEvent e) {
+		    	Patient p = list2.getSelectedValue();
+		    	textArea_2.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
+						"DOB: " + p.getBirthdate() + System.lineSeparator()
+						+ "Gender: " + p.getGender() + System.lineSeparator()
+						+ "Social Insurance: " + p.getSocialInsuranceNumber());
+		    }
+		});*/
+		Patient p = list2.getSelectedValue();
+    	textArea_2.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
+				"DOB: " + p.getBirthdate() + System.lineSeparator()
+				+ "Gender: " + p.getGender() + System.lineSeparator()
+				+ "Social Insurance: " + p.getSocialInsuranceNumber());
+		
+
+		textArea_2.setLineWrap(true);
+		textArea_2.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		textArea_2.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		textArea_2.setBackground(SystemColor.window);
+		
+		JScrollPane pane2 = new JScrollPane(textArea_2);
+		pane2.setBounds(10, 46, 453, 53);
+		BigPanel2.add(pane2);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setBackground(new Color(102, 204, 255));
+		panel_3.setBounds(0, 0, 651, 34);
+		BigPanel2.add(panel_3);
+		
+		JLabel label_1 = new JLabel("Patient Info");
+		label_1.setForeground(Color.WHITE);
+		label_1.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		label_1.setBounds(6, 12, 160, 22);
+		panel_3.add(label_1);
+		
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(new Color(102, 204, 255));
+		panel.setBounds(0, 111, 651, 34);
+		BigPanel2.add(panel);
+		
+		JLabel lblReportOverview = new JLabel("Report Overview");
+		lblReportOverview.setForeground(Color.WHITE);
+		lblReportOverview.setFont(new Font("Myriad Pro", Font.BOLD, 20));
+		lblReportOverview.setBounds(6, 12, 250, 22);
+		panel.add(lblReportOverview);
+		
+		JButton button3 = new JButton("Back");
+		button3.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		button3.setBounds(504, 46, 126, 40);
+		button3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanels(BigPanel1);	
+			}		
+		});
+		BigPanel2.add(button3);
+		
+		JPanel panel_7 = new JPanel();
+		panel_7.setBounds(10, 148, 628, 282);
+		BigPanel2.add(panel_7);
+		panel_7.setLayout(new BoxLayout(panel_7, BoxLayout.X_AXIS));
+		
+		JPanel panel_8 = new JPanel();
+		panel_8.setBounds(10, 432, 628, 282);
+		BigPanel2.add(panel_8);
+		panel_8.setLayout(new BoxLayout(panel_8, BoxLayout.X_AXIS));
+		
+		// Plot the selected parameters
+		
+		/*panel_7.add( getPlotFromLabreports(new ArrayList<Labreport>(), "Erythrozyten") );
+		panel_7.add( getPlotFromLabreports(new ArrayList<Labreport>(), "abcde") );
+		panel_8.add( getPlotFromLabreports(new ArrayList<Labreport>(), "Erythrozyten") );
+		panel_8.add( getPlotFromLabreports(new ArrayList<Labreport>(), "abcde") );*/
+		
+		// find out which Patient was selected
+		
+		Patient selectedPatient = list2.getSelectedValue();
+		// System.out.println("The selected Patient is: " + selectedPatient.getFamilyName());
+		
+		// SelectedList contains all the selected lab parameters.
+		// Unfortunately, atm, only 4 parameters can be plotted, see:
+		// TODO: Make a scrollable pane, so more than four parameters may then be plotted!
+		// Improvised for now: Shorten SelectedList to a maximum of 4 ListItems.
+		
+		List<CodedLabparameter> parametersToPlot = new ArrayList<CodedLabparameter>();
+		
+		for(int i=0; i<4; i++)
+		{
+			if (i<SelectedList.size())
+			{
+				parametersToPlot.add( SelectedList.get(i) );
+			}
+		}
+		
+		// as for now (see TODO above), hardcoded number of plots is four
+		
+		List<Labreport> thePatientsLabreports = mappedLabreports.get( selectedPatient.getSocialInsuranceNumber() );
+		
+		if ( !parametersToPlot.isEmpty() )
+			panel_7.add( getPlotFromLabreports(thePatientsLabreports,parametersToPlot.remove(0)) );
+		if ( !parametersToPlot.isEmpty() )
+			panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );
+		if ( !parametersToPlot.isEmpty() )
+			panel_8.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );
+		if ( !parametersToPlot.isEmpty() )
+			panel_8.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );
+		return BigPanel2;
+	}
+	
+	
+	private ChartPanel getPlotFromLabreports (List<Labreport> inputLabreports, CodedLabparameter parameter)
+	{
+		XYSeries series = new XYSeries(parameter.getDisplayName());
+		
+		String unit = "";
+		
+		for(Labreport labreport : inputLabreports)
+		{
+			for(Observation observation : labreport.getObservations() )
+			{
+				if(observation.getCodeSystem().equals(parameter.getCodeSystem()) && observation.getCodeCode().equals(parameter.getParameterCode()))
+				{
+					String strTime = observation.getEffectiveTimeValue();
+					//long unixtime;
+					String strValue = observation.getValueValue();
+					unit = observation.getValueUnit();
+					
+					/* e.g. 20121201063400+0100
+				            yyyymmddHHMMSSzzzzz
+				            0123456789*/
+					/*
+				Date now = new Date();
+				long ut3 = now.getTime() / 1000L;
+				System.out.println(ut3);
+					 */
+					
+					/*SimpleDateFormat ft = new SimpleDateFormat ("yyyymmddHHMMSSzzzzz");
+					Date time = null;
+					try
+					{
+						//time = ft.parse(strTime);
+						//unixtime = time.getTime() / 1000L;
+						//unixtime = time.getDate() * 1 +
+						//		   time.getMonth() * 100
+						System.out.println("Calculated unixtime: " + unixtime);
+					}
+					catch (ParseException e)
+					{
+						System.out.println("could not parse effective time");
+						unixtime = 0;
+					}*/
+					
+					
+					//int unixtime = Integer.parseInt("121201");
+					char[] chars = new char[6];
+					
+					for(int i=2; i<=7;i++)
+					{
+						chars[i-2] = strTime.charAt(i);
+					}
+					
+					strTime = new String(chars);
+					
+					int unixtime = Integer.parseInt(strTime);
+					
+					series.add(unixtime, Double.parseDouble(strValue));
+				}
+			}
+		}
+		
+		XYSeriesCollection data = new XYSeriesCollection(series);
+		JFreeChart chart = ChartFactory.createXYLineChart(
+				parameter.getDisplayName(),
+				"Date", 
+				unit, 
+				data,
+				PlotOrientation.VERTICAL,
+				false,
+				false,
+				false);
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		
+		return chartPanel;
+	}
 
 	public void printSelectedNames(JCheckBox[] boxes) {
 

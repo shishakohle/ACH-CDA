@@ -32,7 +32,7 @@ public class Main
 	
 	public static void main(String[] args)
 	{
-		System.out.println("ACH-CDA: An application that juggles with CDA labreports.");
+		System.out.println("ACH-CDA: An application that juggles with CDA labreports.\n");
 		
 		// extract all Labreports and map social insurance number to labreports and to patients
 		
@@ -109,7 +109,7 @@ public class Main
 			}
 		});
 		
-		System.out.println("Quit application. Bye.");
+		System.out.println("You're ready to go with the GUI now. Thanks and bye.\n");
 	}
 
 }
