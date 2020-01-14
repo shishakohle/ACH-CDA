@@ -177,13 +177,6 @@ public class GUI extends JFrame {
 			model.addElement(patient);
 		}
 		
-		/*list2.getSelectionModel().addListSelectionListener(e -> {
-			Patient p = list2.getSelectedValue();
-			textArea.setText("Name: " + p.getGivenName() + p.getFamilyName() + System.lineSeparator() + 
-									"DOB: " + p.getBirthdate() + System.lineSeparator()
-									+ "Gender: " + p.getGender() + System.lineSeparator()
-									+ "Social Insurance: " + p.getSocialInsuranceNumber() );
-		});*/
 		
 		
 		Patient_scrollPane.getViewport().setView(list2);
@@ -235,6 +228,7 @@ public class GUI extends JFrame {
 		
 		// read CodedLabparameters from catalogue file
 		tests = CDALabreportParser.extractCodedLabparameters("/home/ingo/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
+		//tests = CDALabreportParser.extractCodedLabparameters("/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
 		System.out.println("The GUI extracted " + tests.size() + " CodedLabparameters from catalogue file.");
 		
 		for(CodedLabparameter test : tests)
@@ -532,15 +526,21 @@ public class GUI extends JFrame {
 		});
 		BigPanel2.add(button3);
 		
-		JPanel panel_7 = new JPanel();
-		panel_7.setBounds(10, 148, 628, 282);
-		BigPanel2.add(panel_7);
-		panel_7.setLayout(new BoxLayout(panel_7, BoxLayout.X_AXIS));
+		/*------Graphs-----*/
 		
-		JPanel panel_8 = new JPanel();
+		
+		JPanel panel_7 = new JPanel();
+	
+		panel_7.setLayout(new GridLayout(0, 2, 0, 0));
+		JScrollPane scroll2 = new JScrollPane(panel_7);
+		scroll2.setBounds(10, 148, 628, 400);
+		BigPanel2.add(scroll2);
+		
+		
+		/*JPanel panel_8 = new JPanel();
 		panel_8.setBounds(10, 432, 628, 282);
 		BigPanel2.add(panel_8);
-		panel_8.setLayout(new BoxLayout(panel_8, BoxLayout.X_AXIS));
+		panel_8.setLayout(new BoxLayout(panel_8, BoxLayout.X_AXIS));*/
 		
 		// Plot the selected parameters
 		
@@ -556,12 +556,12 @@ public class GUI extends JFrame {
 		
 		// SelectedList contains all the selected lab parameters.
 		// Unfortunately, atm, only 4 parameters can be plotted, see:
-		// TODO: Make a scrollable pane, so more than four parameters may then be plotted!
 		// Improvised for now: Shorten SelectedList to a maximum of 4 ListItems.
 		
 		List<CodedLabparameter> parametersToPlot = new ArrayList<CodedLabparameter>();
 		
-		for(int i=0; i<4; i++)
+		//for(int i=0; i<4; i++)
+		for (int i=0; i < SelectedList.size(); i++)
 		{
 			if (i<SelectedList.size())
 			{
@@ -573,15 +573,28 @@ public class GUI extends JFrame {
 		
 		List<Labreport> thePatientsLabreports = mappedLabreports.get( selectedPatient.getSocialInsuranceNumber() );
 		
-		if ( !parametersToPlot.isEmpty() )
+		for (int i=0; i < parametersToPlot.size(); i++)
+		{
+			if ( !parametersToPlot.isEmpty())	
+			{
+				panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0))); 
+				
+			}
+		}
+		
+		return BigPanel2;
+		
+		/*if ( !parametersToPlot.isEmpty() )
 			panel_7.add( getPlotFromLabreports(thePatientsLabreports,parametersToPlot.remove(0)) );
 		if ( !parametersToPlot.isEmpty() )
 			panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );
 		if ( !parametersToPlot.isEmpty() )
-			panel_8.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );
+			panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );
 		if ( !parametersToPlot.isEmpty() )
-			panel_8.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );
-		return BigPanel2;
+			panel_7.add( getPlotFromLabreports(thePatientsLabreports, parametersToPlot.remove(0)) );*
+		return BigPanel2;*/
+		
+		
 	}
 	
 	
@@ -656,15 +669,10 @@ public class GUI extends JFrame {
 				false,
 				false);
 		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		chartPanel.setPreferredSize(new java.awt.Dimension(300, 270));
 		
 		return chartPanel;
 	}
 
-	public void printSelectedNames(JCheckBox[] boxes) {
-
-	    for(JCheckBox box : boxes)
-	        if(box.isSelected())
-	        	panel_7.add(chartPanel);
-	}
+	
 }
