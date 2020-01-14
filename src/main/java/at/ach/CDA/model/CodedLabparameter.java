@@ -1,10 +1,10 @@
-package at.ach.CDA;
+package at.ach.CDA.model;
 
 public class CodedLabparameter
 {
 	private String codeSystem;       // e.g. 2.16.840.1.113883.6.1
 	private String codeSystemName;   // e.g. LOINC
-	private String parameterCode;    // e-g- 26464-8
+	private String parameterCode;    // e.g. 26464-8
 	private String displayName;      // e.g. Leukozyten
 //	private String valueUnit;        // e.g. G/L
 	

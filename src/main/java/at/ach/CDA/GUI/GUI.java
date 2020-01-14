@@ -1,4 +1,4 @@
-package at.ach.CDA;
+package at.ach.CDA.GUI;
 
 import javax.swing.*;
 import java.util.Vector;
@@ -34,6 +34,12 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
+import at.ach.CDA.converter.CDALabreportParser;
+import at.ach.CDA.model.CodedLabparameter;
+import at.ach.CDA.model.Labreport;
+import at.ach.CDA.model.Observation;
+import at.ach.CDA.model.Patient;
 
 import javax.swing.border.BevelBorder;
 

@@ -19,6 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import at.ach.CDA.GUI.GUI;
+import at.ach.CDA.model.Labreport;
+import at.ach.CDA.model.Patient;
+
 /* This "Main" Class contains the main()
  * to be executed to run the application.
  */

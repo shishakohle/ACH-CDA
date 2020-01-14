@@ -1,4 +1,4 @@
-package at.ach.CDA;
+package at.ach.CDA.model;
 
 public class Patient
 {

@@ -1,4 +1,4 @@
-package at.ach.CDA;
+package at.ach.CDA.discarded;
 
 import java.io.File;
 import java.io.IOException;

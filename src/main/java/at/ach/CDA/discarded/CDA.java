@@ -1,4 +1,4 @@
-package at.ach.CDA;
+package at.ach.CDA.discarded;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+
+import at.ach.CDA.model.Patient;
 
 public class CDA
 {
@@ -105,7 +107,3 @@ public class CDA
 		
 	}
 }
-
-	
-
-

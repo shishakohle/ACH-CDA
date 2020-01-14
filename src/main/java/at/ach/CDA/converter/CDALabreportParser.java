@@ -1,4 +1,4 @@
-package at.ach.CDA;
+package at.ach.CDA.converter;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +14,11 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+
+import at.ach.CDA.model.CodedLabparameter;
+import at.ach.CDA.model.Labreport;
+import at.ach.CDA.model.Observation;
+import at.ach.CDA.model.Patient;
 
 /* "StAX is one of the several XML libraries in Java. It's a memory-efficient
  *  library included in the JDK since Java 6. StAX doesn't load the entire

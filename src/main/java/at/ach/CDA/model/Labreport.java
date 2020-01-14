@@ -1,7 +1,9 @@
-package at.ach.CDA;
+package at.ach.CDA.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import at.ach.CDA.converter.CDALabreportParser;
 
 public class Labreport
 {
