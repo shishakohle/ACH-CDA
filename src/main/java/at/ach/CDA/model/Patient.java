@@ -67,9 +67,9 @@ public class Patient
 	}
 	
 	@Override
+	@Deprecated
     public String toString() 
 	{
         return givenName + " " + familyName;
     }
-	
 }

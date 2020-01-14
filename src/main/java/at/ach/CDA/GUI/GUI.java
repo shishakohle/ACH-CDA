@@ -1,37 +1,25 @@
 package at.ach.CDA.GUI;
 
 import javax.swing.*;
-import java.util.Vector;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.lang.reflect.Array;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -41,27 +29,21 @@ import at.ach.CDA.model.Labreport;
 import at.ach.CDA.model.Observation;
 import at.ach.CDA.model.Patient;
 
-import javax.swing.border.BevelBorder;
-
-public class GUI extends JFrame {
-
+public class GUI extends JFrame
+{
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JLayeredPane layeredPane;
 	private JPanel page1;
 	private JPanel page2;
 	private JPanel page3;
-	private final Action action = new SwingAction();
 	private JTextArea patientInfoDisplayPage1;
 	private JList<Patient> patientList = new JList<Patient>();
 	private JTextField labValueField;
 	private List<CodedLabparameter> parameterList = new ArrayList<CodedLabparameter>();
-	private List<CodedLabparameter> selectedList = new ArrayList<CodedLabparameter>();
+	private List<CodedLabparameter> selectedParameters = new ArrayList<CodedLabparameter>();
 	private Map<JCheckBox,CodedLabparameter> checkBoxMap = new HashMap<JCheckBox, CodedLabparameter>();
-	private Map<JComboBox,CodedLabparameter> comboBoxMap = new HashMap<JComboBox, CodedLabparameter>();
-	/**
-	 * Launch the application.
-	 */
-	
+	private Map<JComboBox<String>,CodedLabparameter> comboBoxMap = new HashMap<JComboBox<String>, CodedLabparameter>();
 
 	public void switchPanels(JPanel panel)
 	{
@@ -72,32 +54,19 @@ public class GUI extends JFrame {
 		layeredPane.revalidate();
 		
 		System.out.println("GUI switched to another page. " + (
-				selectedList.isEmpty() ?
+				selectedParameters.isEmpty() ?
 				"No checkboxes were checked recently." :
 				"These checkboxes were checked recently:" )
 				);
 		
-		for (CodedLabparameter checkbox : selectedList)
+		for (CodedLabparameter checkbox : selectedParameters)
 		{
 			System.out.println("\t" + checkbox.getCodeSystemName() + " : " + checkbox.getDisplayName());
 		}
 	}
 	
-	private class SwingAction extends AbstractAction {
-		public SwingAction() {
-			/*putValue(NAME, "SwingAction");
-			putValue(SHORT_DESCRIPTION, "Some short description");*/
-		}
-		public void actionPerformed(ActionEvent e) {
-		}
-	}
-	
-
-	/**
-	 * Create the frame.
-	 */
-	public GUI(Map<String,Patient> mappedPatients, Map<String,List<Labreport>> mappedLabreports) {
-		
+	public GUI (Map<String,Patient> mappedPatients, Map<String,List<Labreport>> mappedLabreports)
+	{
 		// start GUI config
 		setTitle("Ingo & Dahn Healthcare co");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,15 +76,12 @@ public class GUI extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
-		
 
 		layeredPane = new JLayeredPane();
 		
 		layeredPane.setBackground(Color.WHITE);
 		contentPane.add(layeredPane, "name_92778199354778");
 		layeredPane.setLayout(new CardLayout(0, 0));
-		
-		
 		
 		/*---- Page 1 Layout ----*/	
 		
@@ -124,10 +90,8 @@ public class GUI extends JFrame {
 		page1.setBackground(Color.WHITE);
 		page1.setBorder(null);
 		page1.setAlignmentX(Component.LEFT_ALIGNMENT);
-		//layeredPane.add(BigPanel1, "name_93565557549433");
 		page1.setLayout(null);
 		layeredPane.add(page1);
-
 		
 		/*---- : added to the main panel #1--- */
 		
@@ -138,12 +102,12 @@ public class GUI extends JFrame {
 		/*-- BUTTON --*/
 		
 		JButton showGraphButton = new JButton("Show graph");
-		//b1.setAction(action);
 		showGraphButton.setEnabled(false);
-		showGraphButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//switchPanels(BigPanel2);
-				switchPanels(page2(mappedLabreports));
+		showGraphButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				switchPanels( page2(mappedLabreports) );
 			}		
 		});
 		showGraphButton.setBounds(445, 70, 126, 40);
@@ -154,9 +118,10 @@ public class GUI extends JFrame {
 		addLabReportButton.setEnabled(false);
 		addLabReportButton.setForeground(Color.BLACK);
 		addLabReportButton.setBackground(new Color(102, 204, 255));
-		//b1.setAction(action);
-		addLabReportButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		addLabReportButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				switchPanels(page3);	
 			}
 			
@@ -176,13 +141,11 @@ public class GUI extends JFrame {
 			patientListModel.addElement(patient);
 		}
 		
-		
-		
 		Patient_scrollPane.getViewport().setView(patientList);
 		page1.add(Patient_scrollPane);
 		
-		
 		/*--Patient Info--*/
+		
 		patientInfoDisplayPage1 = new JTextArea();
 		patientInfoDisplayPage1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		patientInfoDisplayPage1.setText("Choose the patient");
@@ -193,23 +156,27 @@ public class GUI extends JFrame {
 		page1.add(patientInfoDisplayPage1);
 		
 		/*- chosen list displays the detailed in next coloumn-*/
-		patientList.addListSelectionListener(new ListSelectionListener() {	
+		
+		patientList.addListSelectionListener(new ListSelectionListener()
+		{	
 			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
+			public void valueChanged(ListSelectionEvent arg0)
+			{
 				Patient p = patientList.getSelectedValue();
-				if (!arg0.getValueIsAdjusting()) {
+				if (!arg0.getValueIsAdjusting())
+				{
 					patientInfoDisplayPage1.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
 									"DOB: " + p.getBirthdate() + System.lineSeparator()
 									+ "Gender: " + p.getGender() + System.lineSeparator()
 									+ "Social Insurance: " + p.getSocialInsuranceNumber());
 					showGraphButton.setEnabled(true);
 					addLabReportButton.setEnabled(true);
-			
 				}
 			}
 		});
 		
 		/*--CheckBox: Lab Parameter view selection --*/
+		
 		JPanel checkBoxPanel = new JPanel();
 		checkBoxPanel.setBackground(Color.WHITE);
 		checkBoxPanel.setBounds(16, 270, 623, 500);
@@ -221,9 +188,11 @@ public class GUI extends JFrame {
 		List<JCheckBox> CheckBoxList = new ArrayList<JCheckBox>();
 		
 		// read CodedLabparameters from catalogue file
-		//tests = CDALabreportParser.extractCodedLabparameters("/home/ingo/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
-		parameterList = CDALabreportParser.extractCodedLabparameters("/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
-		//tests = CDALabreportParser.extractCodedLabparameters("U:\\git\\ACH-CDA\\src\\main\\resources\\cda\\labreport0.cda");
+		
+		parameterList = CDALabreportParser.extractCodedLabparameters("/home/ingo/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
+//		parameterList = CDALabreportParser.extractCodedLabparameters("/Users/dahnkim/git/ACH-CDA/src/main/resources/cda/labreport0.cda");
+//		parameterList = CDALabreportParser.extractCodedLabparameters("U:\\git\\ACH-CDA\\src\\main\\resources\\cda\\labreport0.cda");
+		
 		System.out.println("The GUI extracted " + parameterList.size() + " CodedLabparameters from catalogue file.");
 		
 		for(CodedLabparameter test : parameterList)
@@ -236,25 +205,24 @@ public class GUI extends JFrame {
 			
 		for(JCheckBox myCheckBox : CheckBoxList)
 		{
-			myCheckBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					 if (myCheckBox.isSelected())
-							 {
-						 System.out.println("This checkbox was selected: " + myCheckBox.getText());
-						 selectedList.add( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
-							 }
-					 else {
-						 System.out.println("This checkbox was deselected: " + myCheckBox.getText());
-						 selectedList.remove( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
-					 }
-
+			myCheckBox.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					if (myCheckBox.isSelected())
+					{
+						System.out.println("This checkbox was selected: " + myCheckBox.getText());
+						selectedParameters.add( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
+					}
+					else
+					{
+						System.out.println("This checkbox was deselected: " + myCheckBox.getText());
+						selectedParameters.remove( checkBoxMap.get(myCheckBox) ); // TODO: possible null pointer exception here!
+					}
 				}
 			});  
-			
-	
 		}
 			
-		
 		/*-- Contienued: Page 1 Layout  --*/
 		
 		JPanel page1TitleBox1 = new JPanel();
@@ -286,20 +254,19 @@ public class GUI extends JFrame {
 		page1TitleBox2.add(labParameterLabel);
 		labParameterLabel.setForeground(Color.WHITE);
 	    
-		
-		
 		/*-- Page 3 Layout --*/
 		
 		page3 = new JPanel();
 		page3.setBackground(Color.WHITE);
 		layeredPane.add(page3, "name_100020660159536");
 		page3.setLayout(null);
-	
 		
 		JTextArea patientInfoDisplayPage3 = new JTextArea();
-		patientList.addListSelectionListener(new ListSelectionListener() {
+		patientList.addListSelectionListener(new ListSelectionListener()
+		{
 		    @Override
-		    public void valueChanged(ListSelectionEvent e) {
+		    public void valueChanged(ListSelectionEvent e)
+		    {
 		    	Patient p = patientList.getSelectedValue();
 		    	patientInfoDisplayPage3.setText("Name: " + p.getGivenName() + " "+p.getFamilyName() + System.lineSeparator() + 
 						"DOB: " + p.getBirthdate() + System.lineSeparator()
@@ -311,13 +278,11 @@ public class GUI extends JFrame {
 		patientInfoDisplayPage3.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		patientInfoDisplayPage3.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		patientInfoDisplayPage3.setBackground(SystemColor.window);
-		//pane3.setBounds(10, 46, 162, 163);
 		
 		JScrollPane patientInfoScroll2 = new JScrollPane(patientInfoDisplayPage3);
 		patientInfoScroll2.setBounds(10, 46, 453, 53);
 		
 		page3.add(patientInfoScroll2);
-		
 		
 		JPanel page3TitleBox1 = new JPanel();
 		page3TitleBox1.setLayout(null);
@@ -357,54 +322,56 @@ public class GUI extends JFrame {
 		JButton btnNewBack = new JButton("Cancel");
 		btnNewBack.setBounds(6, 0, 126, 40);
 		page3ButtonBox.add(btnNewBack);
-		btnNewBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnNewBack.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				switchPanels(page1);	
 			}		
 		});
 		btnNewBack.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		
-		//table setup
+		// table setup
+		
 		JTable page3Table = new JTable();
 				
-		//a table model creation 
+		// a table model creation 
+		
 		String[] tableColumns = {"ID", "Value", "unit"};
-		DefaultTableModel Tmodel = new DefaultTableModel();
-		Tmodel.setColumnIdentifiers(tableColumns);
+		DefaultTableModel tableModel = new DefaultTableModel();
+		tableModel.setColumnIdentifiers(tableColumns);
 				
-		//set the model to the table
-		page3Table.setModel(Tmodel);
+		// set the model to the table
+		
+		page3Table.setModel(tableModel);
 				
-		//table visual setup
+		// table visual setup
+		
 		page3Table.setBackground(Color.LIGHT_GRAY);
 		page3Table.setForeground(Color.BLACK);
 		Font font = new Font("", 1,22);
 		page3Table.setFont(font);
 		page3Table.setRowHeight(30);
 				
-		//create JScrollPane
+		// create JScrollPane
+		
 		JScrollPane tableScroll = new JScrollPane(page3Table);
 		tableScroll.setBounds(10, 216, 400, 300);
 		page3.add(tableScroll);
-
 		
 		JLabel labelParameter = new JLabel("Parameter");
 		labelParameter.setBounds(436, 228, 128, 16);
 		page3.add(labelParameter);
 		
-		JComboBox<String> paraSelection = new JComboBox();
+		JComboBox<String> paraSelection = new JComboBox<String>();
 		paraSelection.setBounds(433, 256, 200, 27);
 		page3.add(paraSelection);
-		
 
 		for(CodedLabparameter test : parameterList)
 		{	
 			paraSelection.addItem(test.getDisplayName());
 			comboBoxMap.put(paraSelection,test);
-		
 		}
-
-		
 		
 		JLabel lblValue = new JLabel("Value");
 		lblValue.setBounds(436, 295, 61, 16);
@@ -423,19 +390,9 @@ public class GUI extends JFrame {
 		valueUnitSelection.setBounds(436, 390, 118, 27);
 		page3.add(valueUnitSelection);
 		
-		//TODO: once you set value unit in 'CDALabreportParser', can you please enable this
-		
-		
-		/*for (CodedLabparameter test: tests) {
-			comboBox_1.addItem(test.getValueUnit());
-			comboBoxMap.put(comboBox_1, test);
-		}*/
-		
 		valueUnitSelection.addItem("G/l");
 		valueUnitSelection.addItem("T/l");
 		valueUnitSelection.addItem("g/dl");
-		
-
 		
 		JButton btnAdd = new JButton("Add");
 		btnAdd.setBounds(434, 443, 117, 40);
@@ -443,37 +400,29 @@ public class GUI extends JFrame {
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
-			{	String[] row = new String[3];
-				row[0]=paraSelection.getSelectedItem().toString();
-				row[1]=labValueField.getText();
-				row[2]=valueUnitSelection.getSelectedItem().toString();
+			{
+				String[] row = new String[3];
 				
-				
-				//add row to the model
-				Tmodel.addRow(row);
+				row[0] = paraSelection.getSelectedItem().toString();
+				row[1] = labValueField.getText();
+				row[2] = valueUnitSelection.getSelectedItem().toString();
+
+				tableModel.addRow(row);
 			}
 		});
 		
-
-		
 		page3.add(btnAdd);	
-
 	}
 	
-	
 	///----------page 2--------////
-
 	
 	private JPanel page2 (Map<String,List<Labreport>> mappedLabreports)
 	{
 		page2 = new JPanel();
-	
-		
 		
 		page2.setBackground(new Color(255, 255, 255));
 		layeredPane.add(page2, "name_99374934333812");
 		page2.setLayout(null);
-	
 	
 		JTextArea page2PatientInfo = new JTextArea();
 		Patient p = patientList.getSelectedValue();
@@ -481,7 +430,6 @@ public class GUI extends JFrame {
 				"DOB: " + p.getBirthdate() + System.lineSeparator()
 				+ "Gender: " + p.getGender() + System.lineSeparator()
 				+ "Social Insurance: " + p.getSocialInsuranceNumber());
-		
 
 		page2PatientInfo.setLineWrap(true);
 		page2PatientInfo.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -520,15 +468,16 @@ public class GUI extends JFrame {
 		JButton page2BackButton = new JButton("Back");
 		page2BackButton.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		page2BackButton.setBounds(504, 46, 126, 40);
-		page2BackButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		page2BackButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				switchPanels(page1);	
 			}		
 		});
 		page2.add(page2BackButton);
 		
 		/*------Graphs-----*/
-		
 		
 		JPanel graphContainer = new JPanel();
 	
@@ -537,27 +486,16 @@ public class GUI extends JFrame {
 		graphScroll.setBounds(10, 148, 628, 400);
 		page2.add(graphScroll);
 		
-		
-		// find out which Patient was selected
-		
 		Patient selectedPatient = patientList.getSelectedValue();
-	
-		
-		List<CodedLabparameter> parametersToPlot = new ArrayList<CodedLabparameter>();
-	
-		
 		List<Labreport> thePatientsLabreports = mappedLabreports.get( selectedPatient.getSocialInsuranceNumber() );
-	
-		
-		for (CodedLabparameter parameter : selectedList)
+
+		for (CodedLabparameter parameter : selectedParameters)
 		{
-			graphContainer.add( getPlotFromLabreports(thePatientsLabreports,parameter) );
+			graphContainer.add( getPlotFromLabreports(thePatientsLabreports, parameter) );
 		}
 		
 		return page2;
-		
 	}
-	
 	
 	private ChartPanel getPlotFromLabreports (List<Labreport> inputLabreports, CodedLabparameter parameter)
 	{
@@ -572,37 +510,9 @@ public class GUI extends JFrame {
 				if(observation.getCodeSystem().equals(parameter.getCodeSystem()) && observation.getCodeCode().equals(parameter.getParameterCode()))
 				{
 					String strTime = observation.getEffectiveTimeValue();
-					//long unixtime;
 					String strValue = observation.getValueValue();
 					unit = observation.getValueUnit();
 					
-					/* e.g. 20121201063400+0100
-				            yyyymmddHHMMSSzzzzz
-				            0123456789*/
-					/*
-				Date now = new Date();
-				long ut3 = now.getTime() / 1000L;
-				System.out.println(ut3);
-					 */
-					
-					/*SimpleDateFormat ft = new SimpleDateFormat ("yyyymmddHHMMSSzzzzz");
-					Date time = null;
-					try
-					{
-						//time = ft.parse(strTime);
-						//unixtime = time.getTime() / 1000L;
-						//unixtime = time.getDate() * 1 +
-						//		   time.getMonth() * 100
-						System.out.println("Calculated unixtime: " + unixtime);
-					}
-					catch (ParseException e)
-					{
-						System.out.println("could not parse effective time");
-						unixtime = 0;
-					}*/
-					
-					
-					//int unixtime = Integer.parseInt("121201");
 					char[] chars = new char[6];
 					
 					for(int i=2; i<=7;i++)
@@ -612,9 +522,9 @@ public class GUI extends JFrame {
 					
 					strTime = new String(chars);
 					
-					int unixtime = Integer.parseInt(strTime);
+					int weirdTime = Integer.parseInt(strTime);
 					
-					series.add(unixtime, Double.parseDouble(strValue));
+					series.add( weirdTime, Double.parseDouble(strValue) );
 				}
 			}
 		}
@@ -628,13 +538,10 @@ public class GUI extends JFrame {
 				PlotOrientation.VERTICAL,
 				false,
 				false,
-				false);
+				false );
 		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(300, 270));
 		
 		return chartPanel;
 	}
-
-	
 }
-

@@ -23,8 +23,8 @@ import at.ach.CDA.GUI.GUI;
 import at.ach.CDA.model.Labreport;
 import at.ach.CDA.model.Patient;
 
-/* This "Main" Class contains the main()
- * to be executed to run the application.
+/** This "Main" Class contains the main()
+ *  to be executed to run the application.
  */
 public class Main
 {
@@ -110,7 +110,8 @@ public class Main
 					GUI frame = new GUI(mappedPatients, mappedLabreports);
 					frame.setVisible(true);
 				}
-				catch (Exception e) {
+				catch (Exception e)
+				{
 					e.printStackTrace();
 				}
 			}
@@ -118,5 +119,4 @@ public class Main
 		
 		System.out.println("You're ready to go with the GUI now. Thanks and bye.\n");
 	}
-
 }

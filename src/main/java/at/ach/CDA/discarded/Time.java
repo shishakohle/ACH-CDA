@@ -1,5 +1,7 @@
 package at.ach.CDA.discarded;
 
+@Deprecated
+@SuppressWarnings("unused")
 public class Time
 { // TODO
 	/*year

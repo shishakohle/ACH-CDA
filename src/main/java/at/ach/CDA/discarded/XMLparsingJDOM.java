@@ -10,6 +10,8 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
+@Deprecated
+@SuppressWarnings("unused")
 public class XMLparsingJDOM
 {
 	

@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 import at.ach.CDA.model.Patient;
 
+@Deprecated
+@SuppressWarnings("unused")
 public class CDA
 {
 	public static void main(String[] args)

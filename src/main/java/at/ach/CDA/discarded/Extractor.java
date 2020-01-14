@@ -3,6 +3,7 @@ package at.ach.CDA.discarded;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class Extractor
 {
 	public static List<String> extract (List<String> source, String xmlTag)
